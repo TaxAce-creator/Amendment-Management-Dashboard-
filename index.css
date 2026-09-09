@@ -1,0 +1,155 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+:root {
+  --radius: 0.5rem;
+  --background: oklch(0.975 0.004 210);
+  --foreground: oklch(0.235 0.025 245);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.235 0.025 245);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.235 0.025 245);
+  --primary: oklch(0.64 0.13 174);
+  --primary-foreground: oklch(0.99 0 0);
+  --secondary: oklch(0.95 0.01 215);
+  --secondary-foreground: oklch(0.3 0.025 245);
+  --muted: oklch(0.955 0.006 230);
+  --muted-foreground: oklch(0.52 0.025 245);
+  --accent: oklch(0.94 0.035 178);
+  --accent-foreground: oklch(0.32 0.08 178);
+  --destructive: oklch(0.58 0.22 26);
+  --destructive-foreground: oklch(0.99 0 0);
+  --border: oklch(0.9 0.012 235);
+  --input: oklch(0.9 0.012 235);
+  --ring: oklch(0.64 0.13 174);
+  --chart-1: oklch(0.64 0.13 174);
+  --chart-2: oklch(0.61 0.15 244);
+  --chart-3: oklch(0.73 0.15 77);
+  --chart-4: oklch(0.61 0.19 24);
+  --chart-5: oklch(0.58 0.12 302);
+  --sidebar: oklch(0.22 0.03 260);
+  --sidebar-foreground: oklch(0.93 0.008 235);
+  --sidebar-primary: oklch(0.64 0.13 174);
+  --sidebar-primary-foreground: oklch(0.99 0 0);
+  --sidebar-accent: oklch(0.3 0.035 255);
+  --sidebar-accent-foreground: oklch(0.98 0.005 235);
+  --sidebar-border: oklch(1 0 0 / 9%);
+  --sidebar-ring: oklch(0.64 0.13 174);
+}
+
+@layer base {
+  * { @apply border-border outline-ring/50; }
+  html { background: var(--background); }
+  body { @apply bg-background text-foreground antialiased; font-family: "Poppins", ui-sans-serif, system-ui, sans-serif; }
+  button:not(:disabled), [role="button"]:not([aria-disabled="true"]), a[href], select:not(:disabled) { @apply cursor-pointer; }
+  button { transition: transform 150ms cubic-bezier(0.23, 1, 0.32, 1), background-color 180ms ease, color 180ms ease, box-shadow 180ms ease; }
+  button:active:not(:disabled) { transform: scale(0.97); }
+  ::selection { background: color-mix(in oklab, var(--primary) 25%, transparent); }
+}
+
+@layer components {
+  .taxace-card { @apply rounded-lg border border-border/80 bg-card text-card-foreground shadow-[0_1px_2px_rgba(15,23,42,0.04),0_8px_24px_rgba(15,23,42,0.035)]; }
+  .taxace-table-wrap { @apply overflow-x-auto rounded-lg border bg-card; }
+  .taxace-table { @apply w-full min-w-[840px] border-collapse text-sm; }
+  .taxace-table th { @apply whitespace-nowrap border-b bg-muted/60 px-4 py-3 text-left text-[11px] font-semibold uppercase tracking-[0.08em] text-muted-foreground; }
+  .taxace-table td { @apply border-b border-border/70 px-4 py-3 align-middle; }
+  .taxace-table tbody tr { @apply transition-colors hover:bg-muted/35; }
+  .taxace-table tbody tr:last-child td { @apply border-b-0; }
+  .taxace-page { @apply mx-auto w-full max-w-[1600px] space-y-5; }
+  .taxace-grid-lines { background-image: linear-gradient(to right, color-mix(in oklab, var(--border) 40%, transparent) 1px, transparent 1px), linear-gradient(to bottom, color-mix(in oklab, var(--border) 35%, transparent) 1px, transparent 1px); background-size: 32px 32px; }
+}
+
+/* Operational tabs are navigation, not data tables. Keep every destination visible so
+   users never have to find a horizontal scrollbar to reach Settings, Workspace, or Report tabs. */
+[data-slot="tabs-list"] {
+  height: auto !important;
+  max-width: 100%;
+  flex-wrap: wrap !important;
+  justify-content: flex-start !important;
+  gap: 0.25rem;
+  overflow-x: visible !important;
+}
+
+[data-slot="tabs-trigger"] {
+  height: auto !important;
+  min-height: 2rem;
+  flex: 0 1 auto !important;
+  white-space: normal !important;
+  text-align: center;
+  line-height: 1.2rem;
+}
+
+/* Audit Pro uses max-w-6xl. Override the shared dialog's sm:max-w-lg so source facts,
+   task rows, and review fields are visible in a near-full-screen review workspace. */
+@media (min-width: 640px) {
+  [data-slot="dialog-content"].max-w-6xl {
+    width: min(96vw, 1600px);
+    max-width: min(96vw, 1600px) !important;
+    max-height: 94vh;
+  }
+
+  /* Create Amendment uses max-w-2xl, but the shared dialog applies sm:max-w-lg.
+     Give the controlled-creation form enough room for assignment fields without overlap. */
+  [data-slot="dialog-content"].max-w-2xl {
+    width: min(92vw, 900px);
+    max-width: min(92vw, 900px) !important;
+  }
+
+  [data-slot="dialog-content"].max-w-2xl [data-slot="select-trigger"] {
+    width: 100%;
+    min-width: 0;
+    overflow: hidden;
+  }
+
+  [data-slot="dialog-content"].max-w-2xl [data-slot="select-value"] {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; }
+}
