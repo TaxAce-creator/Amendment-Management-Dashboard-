@@ -58,10 +58,10 @@ export const CANOPY_IMPORT_ACTIONS = [
   "Rejected",
 ] as const;
 
-// Postgres enum types. Each must be defined once at module scope and reused
-// across every table that needs it (Postgres enum types are named, global
-// objects — unlike MySQL's inline per-column enums).
-export const roleEnum = pgEnum("role", TAXACE_ROLES);
+// Postgres native enum types. MySQL used inline `mysqlEnum` per column; Postgres
+// requires named enum types, so each distinct value-set gets one definition here
+// and is reused across every column that shares that value-set.
+export const taxaceRoleEnum = pgEnum("taxace_role", TAXACE_ROLES);
 export const importLaneEnum = pgEnum("import_lane", [
   "Canopy Task Import",
   "Client Data Import",
@@ -79,8 +79,8 @@ export const importBatchStatusEnum = pgEnum("import_batch_status", [
 ]);
 export const clientTypeEnum = pgEnum("client_type", ["Individual", "Business"]);
 export const opportunityStatusEnum = pgEnum("opportunity_status", OPPORTUNITY_STATUSES);
-export const canopyImportOutcomeEnum = pgEnum("canopy_import_outcome", CANOPY_IMPORT_ACTIONS);
-export const recommendationEnum = pgEnum("recommendation", [
+export const canopyImportActionEnum = pgEnum("canopy_import_action", CANOPY_IMPORT_ACTIONS);
+export const opportunityRecommendationEnum = pgEnum("opportunity_recommendation", [
   "Recommend Amendment",
   "Additional Review Required",
   "Awaiting Documentation",
@@ -124,19 +124,13 @@ export const importRowActionEnum = pgEnum("import_row_action", [
   "Duplicate / Conflict",
   "Rejected",
 ]);
-export const savedViewWorkspaceEnum = pgEnum("saved_view_workspace", [
+export const workspaceEnum = pgEnum("workspace", [
   "Opportunity Center",
   "Amendment Tracker",
   "Pipeline",
   "Reporting & Analytics",
   "Work Queues",
 ]);
-
-// NOTE on updatedAt: MySQL's `.onUpdateNow()` has no direct Drizzle/Postgres
-// equivalent. Every table below keeps `updatedAt` as a plain timestamp
-// column; a `set_updated_at()` trigger (added in the generated migration,
-// see drizzle/0000_baseline_postgres.sql) stamps it on every UPDATE so
-// application code does not need to set it manually.
 
 export const users = pgTable(
   "users",
@@ -146,7 +140,7 @@ export const users = pgTable(
     email: varchar("email", { length: 320 }).notNull(),
     authIssuer: varchar("authIssuer", { length: 255 }),
     authSubject: varchar("authSubject", { length: 255 }),
-    role: roleEnum("role").default("Viewer").notNull(),
+    role: taxaceRoleEnum("role").default("Viewer").notNull(),
     active: boolean("active").default(true).notNull(),
     createdAt: timestamp("createdAt").defaultNow().notNull(),
     updatedAt: timestamp("updatedAt").defaultNow().notNull(),
@@ -192,6 +186,16 @@ export const oidcLoginStates = pgTable(
     uniqueIndex("oidc_login_states_state_hash_unique").on(table.stateHash),
     index("oidc_login_states_expires_idx").on(table.expiresAt),
   ],
+);
+
+export const authRateLimitBuckets = pgTable(
+  "auth_rate_limit_buckets",
+  {
+    key: varchar("key", { length: 160 }).primaryKey(),
+    count: integer("count").notNull(),
+    resetAt: timestamp("resetAt").notNull(),
+  },
+  table => [index("auth_rate_limit_buckets_reset_idx").on(table.resetAt)],
 );
 
 export const referenceLists = pgTable(
@@ -377,7 +381,7 @@ export const canopyTaskObservations = pgTable(
     sourceRowNumber: integer("sourceRowNumber").notNull(),
     workGroupId: integer("workGroupId").references(() => canopyWorkGroups.id, { onDelete: "restrict" }),
     taskClusterId: integer("taskClusterId").references(() => canopyTaskClusters.id, { onDelete: "restrict" }),
-    outcome: canopyImportOutcomeEnum("outcome").notNull(),
+    outcome: canopyImportActionEnum("outcome").notNull(),
     pinned: varchar("pinned", { length: 80 }).notNull(),
     sourceStatus: varchar("sourceStatus", { length: 160 }).notNull(),
     task: varchar("task", { length: 500 }).notNull(),
@@ -415,7 +419,7 @@ export const opportunityReviews = pgTable(
     sourceWorkGroupId: integer("sourceWorkGroupId").references(() => canopyWorkGroups.id, { onDelete: "restrict" }),
     assignedReviewerId: integer("assignedReviewerId").references(() => users.id, { onDelete: "set null" }),
     opportunityStatus: opportunityStatusEnum("opportunityStatus").default("Pending Review").notNull(),
-    recommendation: recommendationEnum("recommendation"),
+    recommendation: opportunityRecommendationEnum("recommendation"),
     priority: priorityEnum("priority").default("Medium").notNull(),
     amendmentOpportunity: boolean("amendmentOpportunity"),
     previousReturnsReceived: boolean("previousReturnsReceived").default(false).notNull(),
@@ -630,7 +634,7 @@ export const savedViews = pgTable(
     id: serial("id").primaryKey(),
     userId: integer("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
     name: varchar("name", { length: 120 }).notNull(),
-    workspace: savedViewWorkspaceEnum("workspace").notNull(),
+    workspace: workspaceEnum("workspace").notNull(),
     filters: jsonb("filters").$type<Record<string, unknown>>().notNull(),
     visibleColumns: jsonb("visibleColumns").$type<string[]>(),
     sortConfig: jsonb("sortConfig").$type<Record<string, unknown> | null>(),
