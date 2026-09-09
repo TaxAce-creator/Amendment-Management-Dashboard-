@@ -1,0 +1,15 @@
+.git
+.github
+.env
+.env.*
+!.env.example
+node_modules
+dist
+private-fixtures
+CanopyTasks_*.csv
+*.log
+*.sql.gz
+*.dump
+coverage
+.vscode
+.DS_Store
