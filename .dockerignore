@@ -7,3 +7,5 @@ dist/
 coverage/
 .vscode/
 *.tsbuildinfo
+private-fixtures/
+CanopyTasks_*.csv
