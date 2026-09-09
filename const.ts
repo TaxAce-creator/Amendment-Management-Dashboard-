@@ -1,6 +1,3 @@
-export { COOKIE_NAME } from "@shared/const";
-
-export const startLogin = () => {
-  const returnTo = `${window.location.pathname}${window.location.search}${window.location.hash}`;
-  window.location.assign(`/auth/login?returnTo=${encodeURIComponent(returnTo)}`);
-};
+export const COOKIE_NAME = "taxace_session";
+export const UNAUTHED_ERR_MSG = "Please sign in to TaxAce.";
+export const NOT_ADMIN_ERR_MSG = "You do not have the required permission.";
