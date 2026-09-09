@@ -1,0 +1,4304 @@
+{
+  "id": "11e94696-7bda-4e11-afc4-92ef9c9387fe",
+  "prevId": "00000000-0000-0000-0000-000000000000",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {
+    "public.activity_history": {
+      "name": "activity_history",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "actorType": {
+          "name": "actorType",
+          "type": "actor_type",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "actorUserId": {
+          "name": "actorUserId",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "action": {
+          "name": "action",
+          "type": "varchar(160)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "entityType": {
+          "name": "entityType",
+          "type": "varchar(80)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "entityId": {
+          "name": "entityId",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "clientId": {
+          "name": "clientId",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "amendmentId": {
+          "name": "amendmentId",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "previousValue": {
+          "name": "previousValue",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "newValue": {
+          "name": "newValue",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "note": {
+          "name": "note",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "correlationId": {
+          "name": "correlationId",
+          "type": "varchar(64)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "activity_entity_created_idx": {
+          "name": "activity_entity_created_idx",
+          "columns": [
+            {
+              "expression": "entityType",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "entityId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "createdAt",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "activity_amendment_created_idx": {
+          "name": "activity_amendment_created_idx",
+          "columns": [
+            {
+              "expression": "amendmentId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "createdAt",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "activity_created_idx": {
+          "name": "activity_created_idx",
+          "columns": [
+            {
+              "expression": "createdAt",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "activity_history_actorUserId_users_id_fk": {
+          "name": "activity_history_actorUserId_users_id_fk",
+          "tableFrom": "activity_history",
+          "tableTo": "users",
+          "columnsFrom": [
+            "actorUserId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "activity_history_clientId_client_records_id_fk": {
+          "name": "activity_history_clientId_client_records_id_fk",
+          "tableFrom": "activity_history",
+          "tableTo": "client_records",
+          "columnsFrom": [
+            "clientId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "activity_history_amendmentId_amendment_records_id_fk": {
+          "name": "activity_history_amendmentId_amendment_records_id_fk",
+          "tableFrom": "activity_history",
+          "tableTo": "amendment_records",
+          "columnsFrom": [
+            "amendmentId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.aging_thresholds": {
+      "name": "aging_thresholds",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "workflowStatus": {
+          "name": "workflowStatus",
+          "type": "workflow_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "approachingDays": {
+          "name": "approachingDays",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 14
+        },
+        "overdueDays": {
+          "name": "overdueDays",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 30
+        },
+        "updatedById": {
+          "name": "updatedById",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "aging_thresholds_status_unique": {
+          "name": "aging_thresholds_status_unique",
+          "columns": [
+            {
+              "expression": "workflowStatus",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "aging_thresholds_updatedById_users_id_fk": {
+          "name": "aging_thresholds_updatedById_users_id_fk",
+          "tableFrom": "aging_thresholds",
+          "tableTo": "users",
+          "columnsFrom": [
+            "updatedById"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.amendment_records": {
+      "name": "amendment_records",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "amendmentRecordId": {
+          "name": "amendmentRecordId",
+          "type": "varchar(48)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "clientId": {
+          "name": "clientId",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "workflowStatus": {
+          "name": "workflowStatus",
+          "type": "workflow_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'Investigation'"
+        },
+        "amendmentReasonId": {
+          "name": "amendmentReasonId",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "triggerSourceId": {
+          "name": "triggerSourceId",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "amendmentType": {
+          "name": "amendmentType",
+          "type": "varchar(160)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "amendmentReason": {
+          "name": "amendmentReason",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "assessmentSummary": {
+          "name": "assessmentSummary",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "documentsReceivedSummary": {
+          "name": "documentsReceivedSummary",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "documentsNeededSummary": {
+          "name": "documentsNeededSummary",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "documentationStatus": {
+          "name": "documentationStatus",
+          "type": "varchar(120)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "auditEstimatedTaxImpact": {
+          "name": "auditEstimatedTaxImpact",
+          "type": "numeric(14, 2)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "federalTaxImpact": {
+          "name": "federalTaxImpact",
+          "type": "numeric(14, 2)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "californiaTaxImpact": {
+          "name": "californiaTaxImpact",
+          "type": "numeric(14, 2)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "estimatedRefundBalanceDue": {
+          "name": "estimatedRefundBalanceDue",
+          "type": "numeric(14, 2)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "riskIfNotAmended": {
+          "name": "riskIfNotAmended",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "priority": {
+          "name": "priority",
+          "type": "priority",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'Medium'"
+        },
+        "nextAction": {
+          "name": "nextAction",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "assignedPreparerId": {
+          "name": "assignedPreparerId",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "assignedEaReviewerId": {
+          "name": "assignedEaReviewerId",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "currentOwnerId": {
+          "name": "currentOwnerId",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "dateStarted": {
+          "name": "dateStarted",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "dueDate": {
+          "name": "dueDate",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "paymentConfirmedAt": {
+          "name": "paymentConfirmedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "signatureReceivedAt": {
+          "name": "signatureReceivedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "lastClientRequestAt": {
+          "name": "lastClientRequestAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "lastClientResponseAt": {
+          "name": "lastClientResponseAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "dateClosed": {
+          "name": "dateClosed",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "lastWorkflowStatusChange": {
+          "name": "lastWorkflowStatusChange",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "archivedAt": {
+          "name": "archivedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "mergedIntoAmendmentId": {
+          "name": "mergedIntoAmendmentId",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "version": {
+          "name": "version",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 1
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "amendment_records_public_id_unique": {
+          "name": "amendment_records_public_id_unique",
+          "columns": [
+            {
+              "expression": "amendmentRecordId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "amendment_records_client_status_idx": {
+          "name": "amendment_records_client_status_idx",
+          "columns": [
+            {
+              "expression": "clientId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "workflowStatus",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "amendment_records_workflow_idx": {
+          "name": "amendment_records_workflow_idx",
+          "columns": [
+            {
+              "expression": "workflowStatus",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "amendment_records_preparer_idx": {
+          "name": "amendment_records_preparer_idx",
+          "columns": [
+            {
+              "expression": "assignedPreparerId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "amendment_records_owner_idx": {
+          "name": "amendment_records_owner_idx",
+          "columns": [
+            {
+              "expression": "currentOwnerId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "amendment_records_status_changed_idx": {
+          "name": "amendment_records_status_changed_idx",
+          "columns": [
+            {
+              "expression": "lastWorkflowStatusChange",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "amendment_records_clientId_client_records_id_fk": {
+          "name": "amendment_records_clientId_client_records_id_fk",
+          "tableFrom": "amendment_records",
+          "tableTo": "client_records",
+          "columnsFrom": [
+            "clientId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        },
+        "amendment_records_amendmentReasonId_reference_values_id_fk": {
+          "name": "amendment_records_amendmentReasonId_reference_values_id_fk",
+          "tableFrom": "amendment_records",
+          "tableTo": "reference_values",
+          "columnsFrom": [
+            "amendmentReasonId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "amendment_records_triggerSourceId_reference_values_id_fk": {
+          "name": "amendment_records_triggerSourceId_reference_values_id_fk",
+          "tableFrom": "amendment_records",
+          "tableTo": "reference_values",
+          "columnsFrom": [
+            "triggerSourceId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "amendment_records_assignedPreparerId_users_id_fk": {
+          "name": "amendment_records_assignedPreparerId_users_id_fk",
+          "tableFrom": "amendment_records",
+          "tableTo": "users",
+          "columnsFrom": [
+            "assignedPreparerId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        },
+        "amendment_records_assignedEaReviewerId_users_id_fk": {
+          "name": "amendment_records_assignedEaReviewerId_users_id_fk",
+          "tableFrom": "amendment_records",
+          "tableTo": "users",
+          "columnsFrom": [
+            "assignedEaReviewerId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "amendment_records_currentOwnerId_users_id_fk": {
+          "name": "amendment_records_currentOwnerId_users_id_fk",
+          "tableFrom": "amendment_records",
+          "tableTo": "users",
+          "columnsFrom": [
+            "currentOwnerId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        },
+        "amendment_records_mergedIntoAmendmentId_amendment_records_id_fk": {
+          "name": "amendment_records_mergedIntoAmendmentId_amendment_records_id_fk",
+          "tableFrom": "amendment_records",
+          "tableTo": "amendment_records",
+          "columnsFrom": [
+            "mergedIntoAmendmentId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.amendment_source_links": {
+      "name": "amendment_source_links",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "amendmentId": {
+          "name": "amendmentId",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "workGroupId": {
+          "name": "workGroupId",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "amendment_source_links_unique": {
+          "name": "amendment_source_links_unique",
+          "columns": [
+            {
+              "expression": "amendmentId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "workGroupId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "amendment_source_links_amendmentId_amendment_records_id_fk": {
+          "name": "amendment_source_links_amendmentId_amendment_records_id_fk",
+          "tableFrom": "amendment_source_links",
+          "tableTo": "amendment_records",
+          "columnsFrom": [
+            "amendmentId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        },
+        "amendment_source_links_workGroupId_canopy_work_groups_id_fk": {
+          "name": "amendment_source_links_workGroupId_canopy_work_groups_id_fk",
+          "tableFrom": "amendment_source_links",
+          "tableTo": "canopy_work_groups",
+          "columnsFrom": [
+            "workGroupId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.assignments": {
+      "name": "assignments",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "amendmentId": {
+          "name": "amendmentId",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "opportunityReviewId": {
+          "name": "opportunityReviewId",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "assignmentRole": {
+          "name": "assignmentRole",
+          "type": "assignment_role",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "assigneeId": {
+          "name": "assigneeId",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "assignedById": {
+          "name": "assignedById",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "assignmentDate": {
+          "name": "assignmentDate",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "endedAt": {
+          "name": "endedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "current": {
+          "name": "current",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": true
+        }
+      },
+      "indexes": {
+        "assignments_amendment_current_idx": {
+          "name": "assignments_amendment_current_idx",
+          "columns": [
+            {
+              "expression": "amendmentId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "current",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "assignments_assignee_current_idx": {
+          "name": "assignments_assignee_current_idx",
+          "columns": [
+            {
+              "expression": "assigneeId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "current",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "assignments_amendmentId_amendment_records_id_fk": {
+          "name": "assignments_amendmentId_amendment_records_id_fk",
+          "tableFrom": "assignments",
+          "tableTo": "amendment_records",
+          "columnsFrom": [
+            "amendmentId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        },
+        "assignments_opportunityReviewId_opportunity_reviews_id_fk": {
+          "name": "assignments_opportunityReviewId_opportunity_reviews_id_fk",
+          "tableFrom": "assignments",
+          "tableTo": "opportunity_reviews",
+          "columnsFrom": [
+            "opportunityReviewId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        },
+        "assignments_assigneeId_users_id_fk": {
+          "name": "assignments_assigneeId_users_id_fk",
+          "tableFrom": "assignments",
+          "tableTo": "users",
+          "columnsFrom": [
+            "assigneeId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        },
+        "assignments_assignedById_users_id_fk": {
+          "name": "assignments_assignedById_users_id_fk",
+          "tableFrom": "assignments",
+          "tableTo": "users",
+          "columnsFrom": [
+            "assignedById"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.canopy_client_aliases": {
+      "name": "canopy_client_aliases",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "sourceName": {
+          "name": "sourceName",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "normalizedName": {
+          "name": "normalizedName",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "clientRecordId": {
+          "name": "clientRecordId",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "firstSeenBatchId": {
+          "name": "firstSeenBatchId",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "lastSeenBatchId": {
+          "name": "lastSeenBatchId",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "canopy_client_aliases_normalized_unique": {
+          "name": "canopy_client_aliases_normalized_unique",
+          "columns": [
+            {
+              "expression": "normalizedName",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "canopy_client_aliases_client_idx": {
+          "name": "canopy_client_aliases_client_idx",
+          "columns": [
+            {
+              "expression": "clientRecordId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "canopy_client_aliases_clientRecordId_client_records_id_fk": {
+          "name": "canopy_client_aliases_clientRecordId_client_records_id_fk",
+          "tableFrom": "canopy_client_aliases",
+          "tableTo": "client_records",
+          "columnsFrom": [
+            "clientRecordId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        },
+        "canopy_client_aliases_firstSeenBatchId_import_batches_id_fk": {
+          "name": "canopy_client_aliases_firstSeenBatchId_import_batches_id_fk",
+          "tableFrom": "canopy_client_aliases",
+          "tableTo": "import_batches",
+          "columnsFrom": [
+            "firstSeenBatchId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        },
+        "canopy_client_aliases_lastSeenBatchId_import_batches_id_fk": {
+          "name": "canopy_client_aliases_lastSeenBatchId_import_batches_id_fk",
+          "tableFrom": "canopy_client_aliases",
+          "tableTo": "import_batches",
+          "columnsFrom": [
+            "lastSeenBatchId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.canopy_task_clusters": {
+      "name": "canopy_task_clusters",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "workGroupId": {
+          "name": "workGroupId",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "logicalKey": {
+          "name": "logicalKey",
+          "type": "varchar(2000)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "logicalKeyHash": {
+          "name": "logicalKeyHash",
+          "type": "varchar(64)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "task": {
+          "name": "task",
+          "type": "varchar(500)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "taskType": {
+          "name": "taskType",
+          "type": "varchar(160)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "taxYear": {
+          "name": "taxYear",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "returnType": {
+          "name": "returnType",
+          "type": "varchar(120)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "currentSourceStatus": {
+          "name": "currentSourceStatus",
+          "type": "varchar(160)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "currentDueDate": {
+          "name": "currentDueDate",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "currentPinnedRaw": {
+          "name": "currentPinnedRaw",
+          "type": "varchar(80)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "currentPinned": {
+          "name": "currentPinned",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "currentAssigneeRaw": {
+          "name": "currentAssigneeRaw",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "currentAssignees": {
+          "name": "currentAssignees",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "sourceMultiplicity": {
+          "name": "sourceMultiplicity",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 1
+        },
+        "currentConflict": {
+          "name": "currentConflict",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "currentProjectionHash": {
+          "name": "currentProjectionHash",
+          "type": "varchar(64)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "lastSeenBatchId": {
+          "name": "lastSeenBatchId",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "lastSeenSourceExportedAt": {
+          "name": "lastSeenSourceExportedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "canopy_task_clusters_key_hash_unique": {
+          "name": "canopy_task_clusters_key_hash_unique",
+          "columns": [
+            {
+              "expression": "logicalKeyHash",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "canopy_task_clusters_work_group_idx": {
+          "name": "canopy_task_clusters_work_group_idx",
+          "columns": [
+            {
+              "expression": "workGroupId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "canopy_task_clusters_year_return_idx": {
+          "name": "canopy_task_clusters_year_return_idx",
+          "columns": [
+            {
+              "expression": "taxYear",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "returnType",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "canopy_task_clusters_status_idx": {
+          "name": "canopy_task_clusters_status_idx",
+          "columns": [
+            {
+              "expression": "currentSourceStatus",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "canopy_task_clusters_workGroupId_canopy_work_groups_id_fk": {
+          "name": "canopy_task_clusters_workGroupId_canopy_work_groups_id_fk",
+          "tableFrom": "canopy_task_clusters",
+          "tableTo": "canopy_work_groups",
+          "columnsFrom": [
+            "workGroupId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        },
+        "canopy_task_clusters_lastSeenBatchId_import_batches_id_fk": {
+          "name": "canopy_task_clusters_lastSeenBatchId_import_batches_id_fk",
+          "tableFrom": "canopy_task_clusters",
+          "tableTo": "import_batches",
+          "columnsFrom": [
+            "lastSeenBatchId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.canopy_task_observations": {
+      "name": "canopy_task_observations",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "importBatchId": {
+          "name": "importBatchId",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "sourceRowNumber": {
+          "name": "sourceRowNumber",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "workGroupId": {
+          "name": "workGroupId",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "taskClusterId": {
+          "name": "taskClusterId",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "outcome": {
+          "name": "outcome",
+          "type": "canopy_import_outcome",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "pinned": {
+          "name": "pinned",
+          "type": "varchar(80)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "sourceStatus": {
+          "name": "sourceStatus",
+          "type": "varchar(160)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "task": {
+          "name": "task",
+          "type": "varchar(500)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "client": {
+          "name": "client",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "taskType": {
+          "name": "taskType",
+          "type": "varchar(160)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "parentTask": {
+          "name": "parentTask",
+          "type": "varchar(500)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "taxYear": {
+          "name": "taxYear",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "returnType": {
+          "name": "returnType",
+          "type": "varchar(120)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "dueDate": {
+          "name": "dueDate",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "assigneeRaw": {
+          "name": "assigneeRaw",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "parsedAssignees": {
+          "name": "parsedAssignees",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "workGroupKey": {
+          "name": "workGroupKey",
+          "type": "varchar(1400)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "workGroupKeyHash": {
+          "name": "workGroupKeyHash",
+          "type": "varchar(64)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "logicalKey": {
+          "name": "logicalKey",
+          "type": "varchar(2000)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "logicalKeyHash": {
+          "name": "logicalKeyHash",
+          "type": "varchar(64)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "rowHash": {
+          "name": "rowHash",
+          "type": "varchar(64)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "projectionHash": {
+          "name": "projectionHash",
+          "type": "varchar(64)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "rawRow": {
+          "name": "rawRow",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "extraColumns": {
+          "name": "extraColumns",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "sourceExportedAt": {
+          "name": "sourceExportedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "canopy_observations_batch_row_unique": {
+          "name": "canopy_observations_batch_row_unique",
+          "columns": [
+            {
+              "expression": "importBatchId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "sourceRowNumber",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "canopy_observations_cluster_idx": {
+          "name": "canopy_observations_cluster_idx",
+          "columns": [
+            {
+              "expression": "taskClusterId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "sourceExportedAt",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "canopy_observations_work_group_idx": {
+          "name": "canopy_observations_work_group_idx",
+          "columns": [
+            {
+              "expression": "workGroupId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "sourceExportedAt",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "canopy_task_observations_importBatchId_import_batches_id_fk": {
+          "name": "canopy_task_observations_importBatchId_import_batches_id_fk",
+          "tableFrom": "canopy_task_observations",
+          "tableTo": "import_batches",
+          "columnsFrom": [
+            "importBatchId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        },
+        "canopy_task_observations_workGroupId_canopy_work_groups_id_fk": {
+          "name": "canopy_task_observations_workGroupId_canopy_work_groups_id_fk",
+          "tableFrom": "canopy_task_observations",
+          "tableTo": "canopy_work_groups",
+          "columnsFrom": [
+            "workGroupId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        },
+        "canopy_task_observations_taskClusterId_canopy_task_clusters_id_fk": {
+          "name": "canopy_task_observations_taskClusterId_canopy_task_clusters_id_fk",
+          "tableFrom": "canopy_task_observations",
+          "tableTo": "canopy_task_clusters",
+          "columnsFrom": [
+            "taskClusterId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.canopy_work_groups": {
+      "name": "canopy_work_groups",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "workGroupKey": {
+          "name": "workGroupKey",
+          "type": "varchar(1400)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "workGroupKeyHash": {
+          "name": "workGroupKeyHash",
+          "type": "varchar(64)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "clientRecordId": {
+          "name": "clientRecordId",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "sourceClientName": {
+          "name": "sourceClientName",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "normalizedClientName": {
+          "name": "normalizedClientName",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "parentTask": {
+          "name": "parentTask",
+          "type": "varchar(500)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "returnType": {
+          "name": "returnType",
+          "type": "varchar(120)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "firstSeenBatchId": {
+          "name": "firstSeenBatchId",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "lastSeenBatchId": {
+          "name": "lastSeenBatchId",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "lastSeenSourceExportedAt": {
+          "name": "lastSeenSourceExportedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "canopy_work_groups_key_hash_unique": {
+          "name": "canopy_work_groups_key_hash_unique",
+          "columns": [
+            {
+              "expression": "workGroupKeyHash",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "canopy_work_groups_client_idx": {
+          "name": "canopy_work_groups_client_idx",
+          "columns": [
+            {
+              "expression": "clientRecordId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "canopy_work_groups_parent_return_idx": {
+          "name": "canopy_work_groups_parent_return_idx",
+          "columns": [
+            {
+              "expression": "parentTask",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "returnType",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "canopy_work_groups_clientRecordId_client_records_id_fk": {
+          "name": "canopy_work_groups_clientRecordId_client_records_id_fk",
+          "tableFrom": "canopy_work_groups",
+          "tableTo": "client_records",
+          "columnsFrom": [
+            "clientRecordId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        },
+        "canopy_work_groups_firstSeenBatchId_import_batches_id_fk": {
+          "name": "canopy_work_groups_firstSeenBatchId_import_batches_id_fk",
+          "tableFrom": "canopy_work_groups",
+          "tableTo": "import_batches",
+          "columnsFrom": [
+            "firstSeenBatchId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        },
+        "canopy_work_groups_lastSeenBatchId_import_batches_id_fk": {
+          "name": "canopy_work_groups_lastSeenBatchId_import_batches_id_fk",
+          "tableFrom": "canopy_work_groups",
+          "tableTo": "import_batches",
+          "columnsFrom": [
+            "lastSeenBatchId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.client_records": {
+      "name": "client_records",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "clientId": {
+          "name": "clientId",
+          "type": "varchar(120)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "clientName": {
+          "name": "clientName",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "normalizedClientName": {
+          "name": "normalizedClientName",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "clientSinceDate": {
+          "name": "clientSinceDate",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "clientType": {
+          "name": "clientType",
+          "type": "client_type",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "assignedReviewerId": {
+          "name": "assignedReviewerId",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "opportunityStatus": {
+          "name": "opportunityStatus",
+          "type": "opportunity_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'Pending Review'"
+        },
+        "sourceImportBatchId": {
+          "name": "sourceImportBatchId",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "client_records_client_id_unique": {
+          "name": "client_records_client_id_unique",
+          "columns": [
+            {
+              "expression": "clientId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "client_records_name_idx": {
+          "name": "client_records_name_idx",
+          "columns": [
+            {
+              "expression": "clientName",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "client_records_normalized_name_idx": {
+          "name": "client_records_normalized_name_idx",
+          "columns": [
+            {
+              "expression": "normalizedClientName",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "client_records_opportunity_idx": {
+          "name": "client_records_opportunity_idx",
+          "columns": [
+            {
+              "expression": "opportunityStatus",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "client_records_reviewer_idx": {
+          "name": "client_records_reviewer_idx",
+          "columns": [
+            {
+              "expression": "assignedReviewerId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "client_records_assignedReviewerId_users_id_fk": {
+          "name": "client_records_assignedReviewerId_users_id_fk",
+          "tableFrom": "client_records",
+          "tableTo": "users",
+          "columnsFrom": [
+            "assignedReviewerId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "client_records_sourceImportBatchId_import_batches_id_fk": {
+          "name": "client_records_sourceImportBatchId_import_batches_id_fk",
+          "tableFrom": "client_records",
+          "tableTo": "import_batches",
+          "columnsFrom": [
+            "sourceImportBatchId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.document_checklist": {
+      "name": "document_checklist",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "amendmentId": {
+          "name": "amendmentId",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "documentTypeId": {
+          "name": "documentTypeId",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "status": {
+          "name": "status",
+          "type": "document_checklist_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'Needed'"
+        },
+        "note": {
+          "name": "note",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "requestedAt": {
+          "name": "requestedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "receivedAt": {
+          "name": "receivedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "updatedById": {
+          "name": "updatedById",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "document_checklist_amendment_idx": {
+          "name": "document_checklist_amendment_idx",
+          "columns": [
+            {
+              "expression": "amendmentId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "status",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "document_checklist_amendmentId_amendment_records_id_fk": {
+          "name": "document_checklist_amendmentId_amendment_records_id_fk",
+          "tableFrom": "document_checklist",
+          "tableTo": "amendment_records",
+          "columnsFrom": [
+            "amendmentId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        },
+        "document_checklist_documentTypeId_reference_values_id_fk": {
+          "name": "document_checklist_documentTypeId_reference_values_id_fk",
+          "tableFrom": "document_checklist",
+          "tableTo": "reference_values",
+          "columnsFrom": [
+            "documentTypeId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        },
+        "document_checklist_updatedById_users_id_fk": {
+          "name": "document_checklist_updatedById_users_id_fk",
+          "tableFrom": "document_checklist",
+          "tableTo": "users",
+          "columnsFrom": [
+            "updatedById"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.import_batches": {
+      "name": "import_batches",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "batchId": {
+          "name": "batchId",
+          "type": "varchar(48)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "lane": {
+          "name": "lane",
+          "type": "import_lane",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "uploaderId": {
+          "name": "uploaderId",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "originalFilename": {
+          "name": "originalFilename",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "contentType": {
+          "name": "contentType",
+          "type": "varchar(120)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "storageKey": {
+          "name": "storageKey",
+          "type": "varchar(500)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "resultReportKey": {
+          "name": "resultReportKey",
+          "type": "varchar(500)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "status": {
+          "name": "status",
+          "type": "import_batch_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'Uploaded'"
+        },
+        "normalizedHeaders": {
+          "name": "normalizedHeaders",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "fileHash": {
+          "name": "fileHash",
+          "type": "varchar(64)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "sourceExportedAt": {
+          "name": "sourceExportedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "sourceExportedAtConfirmed": {
+          "name": "sourceExportedAtConfirmed",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "headerFingerprint": {
+          "name": "headerFingerprint",
+          "type": "varchar(64)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "parserVersion": {
+          "name": "parserVersion",
+          "type": "varchar(80)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "totalRows": {
+          "name": "totalRows",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "acceptedCount": {
+          "name": "acceptedCount",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "newCount": {
+          "name": "newCount",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "updatedCount": {
+          "name": "updatedCount",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "changedCount": {
+          "name": "changedCount",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "unchangedCount": {
+          "name": "unchangedCount",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "olderSnapshotCount": {
+          "name": "olderSnapshotCount",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "duplicateCount": {
+          "name": "duplicateCount",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "conflictCount": {
+          "name": "conflictCount",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "rejectedCount": {
+          "name": "rejectedCount",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "clientCount": {
+          "name": "clientCount",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "workGroupCount": {
+          "name": "workGroupCount",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "logicalClusterCount": {
+          "name": "logicalClusterCount",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "errorSummary": {
+          "name": "errorSummary",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "startedAt": {
+          "name": "startedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "completedAt": {
+          "name": "completedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "import_batches_batch_id_unique": {
+          "name": "import_batches_batch_id_unique",
+          "columns": [
+            {
+              "expression": "batchId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "import_batches_uploader_started_idx": {
+          "name": "import_batches_uploader_started_idx",
+          "columns": [
+            {
+              "expression": "uploaderId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "startedAt",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "import_batches_status_idx": {
+          "name": "import_batches_status_idx",
+          "columns": [
+            {
+              "expression": "status",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "import_batches_source_exported_idx": {
+          "name": "import_batches_source_exported_idx",
+          "columns": [
+            {
+              "expression": "sourceExportedAt",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "import_batches_uploaderId_users_id_fk": {
+          "name": "import_batches_uploaderId_users_id_fk",
+          "tableFrom": "import_batches",
+          "tableTo": "users",
+          "columnsFrom": [
+            "uploaderId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.import_row_results": {
+      "name": "import_row_results",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "importBatchId": {
+          "name": "importBatchId",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "sourceRowNumber": {
+          "name": "sourceRowNumber",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "normalizedClientId": {
+          "name": "normalizedClientId",
+          "type": "varchar(120)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "clientName": {
+          "name": "clientName",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "action": {
+          "name": "action",
+          "type": "import_row_action",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "messages": {
+          "name": "messages",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "targetClientId": {
+          "name": "targetClientId",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "normalizedRow": {
+          "name": "normalizedRow",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "rowHash": {
+          "name": "rowHash",
+          "type": "varchar(64)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "import_row_batch_row_unique": {
+          "name": "import_row_batch_row_unique",
+          "columns": [
+            {
+              "expression": "importBatchId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "sourceRowNumber",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "import_row_batch_action_idx": {
+          "name": "import_row_batch_action_idx",
+          "columns": [
+            {
+              "expression": "importBatchId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "action",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "import_row_results_importBatchId_import_batches_id_fk": {
+          "name": "import_row_results_importBatchId_import_batches_id_fk",
+          "tableFrom": "import_row_results",
+          "tableTo": "import_batches",
+          "columnsFrom": [
+            "importBatchId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        },
+        "import_row_results_targetClientId_client_records_id_fk": {
+          "name": "import_row_results_targetClientId_client_records_id_fk",
+          "tableFrom": "import_row_results",
+          "tableTo": "client_records",
+          "columnsFrom": [
+            "targetClientId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.notes": {
+      "name": "notes",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "amendmentId": {
+          "name": "amendmentId",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "authorId": {
+          "name": "authorId",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "body": {
+          "name": "body",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "notes_amendment_created_idx": {
+          "name": "notes_amendment_created_idx",
+          "columns": [
+            {
+              "expression": "amendmentId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "createdAt",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "notes_amendmentId_amendment_records_id_fk": {
+          "name": "notes_amendmentId_amendment_records_id_fk",
+          "tableFrom": "notes",
+          "tableTo": "amendment_records",
+          "columnsFrom": [
+            "amendmentId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        },
+        "notes_authorId_users_id_fk": {
+          "name": "notes_authorId_users_id_fk",
+          "tableFrom": "notes",
+          "tableTo": "users",
+          "columnsFrom": [
+            "authorId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.notification_preferences": {
+      "name": "notification_preferences",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "userId": {
+          "name": "userId",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "assignments": {
+          "name": "assignments",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": true
+        },
+        "overdue": {
+          "name": "overdue",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": true
+        },
+        "clientSignature": {
+          "name": "clientSignature",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": true
+        },
+        "documentRequests": {
+          "name": "documentRequests",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": true
+        },
+        "eaReview": {
+          "name": "eaReview",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": true
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "notification_preferences_user_unique": {
+          "name": "notification_preferences_user_unique",
+          "columns": [
+            {
+              "expression": "userId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "notification_preferences_userId_users_id_fk": {
+          "name": "notification_preferences_userId_users_id_fk",
+          "tableFrom": "notification_preferences",
+          "tableTo": "users",
+          "columnsFrom": [
+            "userId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.oidc_login_states": {
+      "name": "oidc_login_states",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "stateHash": {
+          "name": "stateHash",
+          "type": "varchar(64)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "codeVerifier": {
+          "name": "codeVerifier",
+          "type": "varchar(160)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "nonce": {
+          "name": "nonce",
+          "type": "varchar(160)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "returnTo": {
+          "name": "returnTo",
+          "type": "varchar(500)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'/'"
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "expiresAt": {
+          "name": "expiresAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "oidc_login_states_state_hash_unique": {
+          "name": "oidc_login_states_state_hash_unique",
+          "columns": [
+            {
+              "expression": "stateHash",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "oidc_login_states_expires_idx": {
+          "name": "oidc_login_states_expires_idx",
+          "columns": [
+            {
+              "expression": "expiresAt",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.opportunity_reviews": {
+      "name": "opportunity_reviews",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "clientId": {
+          "name": "clientId",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "sourceWorkGroupId": {
+          "name": "sourceWorkGroupId",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "assignedReviewerId": {
+          "name": "assignedReviewerId",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "opportunityStatus": {
+          "name": "opportunityStatus",
+          "type": "opportunity_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'Pending Review'"
+        },
+        "recommendation": {
+          "name": "recommendation",
+          "type": "recommendation",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "priority": {
+          "name": "priority",
+          "type": "priority",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'Medium'"
+        },
+        "amendmentOpportunity": {
+          "name": "amendmentOpportunity",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "previousReturnsReceived": {
+          "name": "previousReturnsReceived",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "priorYearDocumentsReceived": {
+          "name": "priorYearDocumentsReceived",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "triggerSourceId": {
+          "name": "triggerSourceId",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "amendmentReasonId": {
+          "name": "amendmentReasonId",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "amendmentReasonSummary": {
+          "name": "amendmentReasonSummary",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "documentsReceivedSummary": {
+          "name": "documentsReceivedSummary",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "documentsNeededSummary": {
+          "name": "documentsNeededSummary",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "reviewNotes": {
+          "name": "reviewNotes",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "amendmentAssessment": {
+          "name": "amendmentAssessment",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "estimatedTaxImpact": {
+          "name": "estimatedTaxImpact",
+          "type": "numeric(14, 2)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "reviewCompletionDate": {
+          "name": "reviewCompletionDate",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "active": {
+          "name": "active",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": true
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "opportunity_reviews_client_active_idx": {
+          "name": "opportunity_reviews_client_active_idx",
+          "columns": [
+            {
+              "expression": "clientId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "active",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "opportunity_reviews_status_idx": {
+          "name": "opportunity_reviews_status_idx",
+          "columns": [
+            {
+              "expression": "opportunityStatus",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "opportunity_reviews_reviewer_idx": {
+          "name": "opportunity_reviews_reviewer_idx",
+          "columns": [
+            {
+              "expression": "assignedReviewerId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "opportunity_reviews_source_work_group_idx": {
+          "name": "opportunity_reviews_source_work_group_idx",
+          "columns": [
+            {
+              "expression": "sourceWorkGroupId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "active",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "opportunity_reviews_clientId_client_records_id_fk": {
+          "name": "opportunity_reviews_clientId_client_records_id_fk",
+          "tableFrom": "opportunity_reviews",
+          "tableTo": "client_records",
+          "columnsFrom": [
+            "clientId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        },
+        "opportunity_reviews_sourceWorkGroupId_canopy_work_groups_id_fk": {
+          "name": "opportunity_reviews_sourceWorkGroupId_canopy_work_groups_id_fk",
+          "tableFrom": "opportunity_reviews",
+          "tableTo": "canopy_work_groups",
+          "columnsFrom": [
+            "sourceWorkGroupId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        },
+        "opportunity_reviews_assignedReviewerId_users_id_fk": {
+          "name": "opportunity_reviews_assignedReviewerId_users_id_fk",
+          "tableFrom": "opportunity_reviews",
+          "tableTo": "users",
+          "columnsFrom": [
+            "assignedReviewerId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "opportunity_reviews_triggerSourceId_reference_values_id_fk": {
+          "name": "opportunity_reviews_triggerSourceId_reference_values_id_fk",
+          "tableFrom": "opportunity_reviews",
+          "tableTo": "reference_values",
+          "columnsFrom": [
+            "triggerSourceId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "opportunity_reviews_amendmentReasonId_reference_values_id_fk": {
+          "name": "opportunity_reviews_amendmentReasonId_reference_values_id_fk",
+          "tableFrom": "opportunity_reviews",
+          "tableTo": "reference_values",
+          "columnsFrom": [
+            "amendmentReasonId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.reference_lists": {
+      "name": "reference_lists",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "key": {
+          "name": "key",
+          "type": "varchar(80)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "label": {
+          "name": "label",
+          "type": "varchar(120)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "systemLocked": {
+          "name": "systemLocked",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "reference_lists_key_unique": {
+          "name": "reference_lists_key_unique",
+          "columns": [
+            {
+              "expression": "key",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.reference_values": {
+      "name": "reference_values",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "listId": {
+          "name": "listId",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "key": {
+          "name": "key",
+          "type": "varchar(120)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "label": {
+          "name": "label",
+          "type": "varchar(180)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "sortOrder": {
+          "name": "sortOrder",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "active": {
+          "name": "active",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": true
+        },
+        "systemLocked": {
+          "name": "systemLocked",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "reference_values_list_key_unique": {
+          "name": "reference_values_list_key_unique",
+          "columns": [
+            {
+              "expression": "listId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "key",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "reference_values_list_active_idx": {
+          "name": "reference_values_list_active_idx",
+          "columns": [
+            {
+              "expression": "listId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "active",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "sortOrder",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "reference_values_listId_reference_lists_id_fk": {
+          "name": "reference_values_listId_reference_lists_id_fk",
+          "tableFrom": "reference_values",
+          "tableTo": "reference_lists",
+          "columnsFrom": [
+            "listId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.saved_views": {
+      "name": "saved_views",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "userId": {
+          "name": "userId",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar(120)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "workspace": {
+          "name": "workspace",
+          "type": "saved_view_workspace",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "filters": {
+          "name": "filters",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "visibleColumns": {
+          "name": "visibleColumns",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "sortConfig": {
+          "name": "sortConfig",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "grouping": {
+          "name": "grouping",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "shared": {
+          "name": "shared",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "saved_views_user_workspace_name_unique": {
+          "name": "saved_views_user_workspace_name_unique",
+          "columns": [
+            {
+              "expression": "userId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "workspace",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "name",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "saved_views_workspace_shared_idx": {
+          "name": "saved_views_workspace_shared_idx",
+          "columns": [
+            {
+              "expression": "workspace",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "shared",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "saved_views_userId_users_id_fk": {
+          "name": "saved_views_userId_users_id_fk",
+          "tableFrom": "saved_views",
+          "tableTo": "users",
+          "columnsFrom": [
+            "userId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.tax_year_records": {
+      "name": "tax_year_records",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "amendmentId": {
+          "name": "amendmentId",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "clientId": {
+          "name": "clientId",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "taxYear": {
+          "name": "taxYear",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "taxYearStatus": {
+          "name": "taxYearStatus",
+          "type": "tax_year_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'Investigation'"
+        },
+        "filingMethod": {
+          "name": "filingMethod",
+          "type": "filing_method",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "jurisdiction": {
+          "name": "jurisdiction",
+          "type": "jurisdiction",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "federalStatus": {
+          "name": "federalStatus",
+          "type": "varchar(120)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "stateStatus": {
+          "name": "stateStatus",
+          "type": "varchar(120)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "dateFiled": {
+          "name": "dateFiled",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "dateAccepted": {
+          "name": "dateAccepted",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "amendmentResult": {
+          "name": "amendmentResult",
+          "type": "amendment_result",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "estimatedImpact": {
+          "name": "estimatedImpact",
+          "type": "numeric(14, 2)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "finalImpact": {
+          "name": "finalImpact",
+          "type": "numeric(14, 2)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "assignedUserId": {
+          "name": "assignedUserId",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "activeCoverageKey": {
+          "name": "activeCoverageKey",
+          "type": "varchar(180)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "tax_year_active_coverage_unique": {
+          "name": "tax_year_active_coverage_unique",
+          "columns": [
+            {
+              "expression": "activeCoverageKey",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "tax_year_amendment_idx": {
+          "name": "tax_year_amendment_idx",
+          "columns": [
+            {
+              "expression": "amendmentId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "tax_year_year_idx": {
+          "name": "tax_year_year_idx",
+          "columns": [
+            {
+              "expression": "taxYear",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "tax_year_status_idx": {
+          "name": "tax_year_status_idx",
+          "columns": [
+            {
+              "expression": "taxYearStatus",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "tax_year_records_amendmentId_amendment_records_id_fk": {
+          "name": "tax_year_records_amendmentId_amendment_records_id_fk",
+          "tableFrom": "tax_year_records",
+          "tableTo": "amendment_records",
+          "columnsFrom": [
+            "amendmentId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        },
+        "tax_year_records_clientId_client_records_id_fk": {
+          "name": "tax_year_records_clientId_client_records_id_fk",
+          "tableFrom": "tax_year_records",
+          "tableTo": "client_records",
+          "columnsFrom": [
+            "clientId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        },
+        "tax_year_records_assignedUserId_users_id_fk": {
+          "name": "tax_year_records_assignedUserId_users_id_fk",
+          "tableFrom": "tax_year_records",
+          "tableTo": "users",
+          "columnsFrom": [
+            "assignedUserId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.user_sessions": {
+      "name": "user_sessions",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "userId": {
+          "name": "userId",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "tokenHash": {
+          "name": "tokenHash",
+          "type": "varchar(64)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "expiresAt": {
+          "name": "expiresAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "lastSeenAt": {
+          "name": "lastSeenAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "revokedAt": {
+          "name": "revokedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "user_sessions_token_hash_unique": {
+          "name": "user_sessions_token_hash_unique",
+          "columns": [
+            {
+              "expression": "tokenHash",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "user_sessions_user_expires_idx": {
+          "name": "user_sessions_user_expires_idx",
+          "columns": [
+            {
+              "expression": "userId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "expiresAt",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "user_sessions_expires_idx": {
+          "name": "user_sessions_expires_idx",
+          "columns": [
+            {
+              "expression": "expiresAt",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "user_sessions_userId_users_id_fk": {
+          "name": "user_sessions_userId_users_id_fk",
+          "tableFrom": "user_sessions",
+          "tableTo": "users",
+          "columnsFrom": [
+            "userId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.users": {
+      "name": "users",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "email": {
+          "name": "email",
+          "type": "varchar(320)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "authIssuer": {
+          "name": "authIssuer",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "authSubject": {
+          "name": "authSubject",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "role": {
+          "name": "role",
+          "type": "role",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'Viewer'"
+        },
+        "active": {
+          "name": "active",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": true
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "lastSignedIn": {
+          "name": "lastSignedIn",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "users_email_unique": {
+          "name": "users_email_unique",
+          "columns": [
+            {
+              "expression": "email",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "users_auth_identity_unique": {
+          "name": "users_auth_identity_unique",
+          "columns": [
+            {
+              "expression": "authIssuer",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "authSubject",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "users_role_active_idx": {
+          "name": "users_role_active_idx",
+          "columns": [
+            {
+              "expression": "role",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "active",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.opportunity_audit_details": {
+      "name": "opportunity_audit_details",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "opportunityReviewId": {
+          "name": "opportunityReviewId",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "riskIssueNotes": {
+          "name": "riskIssueNotes",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "auditStartedAt": {
+          "name": "auditStartedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "auditCompletedAt": {
+          "name": "auditCompletedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "updatedById": {
+          "name": "updatedById",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "opportunity_audit_details_review_unique": {
+          "name": "opportunity_audit_details_review_unique",
+          "columns": [
+            {
+              "expression": "opportunityReviewId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "opportunity_audit_details_opportunityReviewId_opportunity_reviews_id_fk": {
+          "name": "opportunity_audit_details_opportunityReviewId_opportunity_reviews_id_fk",
+          "tableFrom": "opportunity_audit_details",
+          "tableTo": "opportunity_reviews",
+          "columnsFrom": [
+            "opportunityReviewId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        },
+        "opportunity_audit_details_updatedById_users_id_fk": {
+          "name": "opportunity_audit_details_updatedById_users_id_fk",
+          "tableFrom": "opportunity_audit_details",
+          "tableTo": "users",
+          "columnsFrom": [
+            "updatedById"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    }
+  },
+  "enums": {
+    "public.actor_type": {
+      "name": "actor_type",
+      "schema": "public",
+      "values": [
+        "user",
+        "system"
+      ]
+    },
+    "public.amendment_result": {
+      "name": "amendment_result",
+      "schema": "public",
+      "values": [
+        "Additional Refund",
+        "Reduced Balance Due",
+        "Increased Refund Offset",
+        "Balance Due",
+        "No Financial Change",
+        "Informational Amendment"
+      ]
+    },
+    "public.assignment_role": {
+      "name": "assignment_role",
+      "schema": "public",
+      "values": [
+        "Assigned Preparer",
+        "EA Reviewer",
+        "Current Owner",
+        "Assigned Reviewer"
+      ]
+    },
+    "public.canopy_import_outcome": {
+      "name": "canopy_import_outcome",
+      "schema": "public",
+      "values": [
+        "New",
+        "Changed",
+        "Unchanged",
+        "Older Snapshot",
+        "Duplicate Occurrence",
+        "Duplicate / Conflict",
+        "Rejected"
+      ]
+    },
+    "public.client_type": {
+      "name": "client_type",
+      "schema": "public",
+      "values": [
+        "Individual",
+        "Business"
+      ]
+    },
+    "public.document_checklist_status": {
+      "name": "document_checklist_status",
+      "schema": "public",
+      "values": [
+        "Needed",
+        "Requested",
+        "Received",
+        "Not Applicable"
+      ]
+    },
+    "public.filing_method": {
+      "name": "filing_method",
+      "schema": "public",
+      "values": [
+        "Electronic Filing",
+        "Paper Filing"
+      ]
+    },
+    "public.import_batch_status": {
+      "name": "import_batch_status",
+      "schema": "public",
+      "values": [
+        "Uploaded",
+        "Validating",
+        "Ready to Commit",
+        "Committed",
+        "Cancelled",
+        "Failed",
+        "Completed with Errors"
+      ]
+    },
+    "public.import_lane": {
+      "name": "import_lane",
+      "schema": "public",
+      "values": [
+        "Canopy Task Import",
+        "Client Data Import",
+        "Reference Data Import",
+        "Opportunity Import"
+      ]
+    },
+    "public.import_row_action": {
+      "name": "import_row_action",
+      "schema": "public",
+      "values": [
+        "New",
+        "Updated",
+        "Unchanged",
+        "Duplicate / Conflict",
+        "Rejected"
+      ]
+    },
+    "public.jurisdiction": {
+      "name": "jurisdiction",
+      "schema": "public",
+      "values": [
+        "Federal",
+        "California",
+        "Federal & California",
+        "Other State"
+      ]
+    },
+    "public.opportunity_status": {
+      "name": "opportunity_status",
+      "schema": "public",
+      "values": [
+        "Pending Review",
+        "Under Review",
+        "Ready to Create Amendment",
+        "No Amendment Needed",
+        "Deferred"
+      ]
+    },
+    "public.priority": {
+      "name": "priority",
+      "schema": "public",
+      "values": [
+        "High",
+        "Medium",
+        "Low"
+      ]
+    },
+    "public.recommendation": {
+      "name": "recommendation",
+      "schema": "public",
+      "values": [
+        "Recommend Amendment",
+        "Additional Review Required",
+        "Awaiting Documentation",
+        "No Amendment Recommended"
+      ]
+    },
+    "public.role": {
+      "name": "role",
+      "schema": "public",
+      "values": [
+        "Admin",
+        "EA Reviewer",
+        "Preparer",
+        "Viewer"
+      ]
+    },
+    "public.saved_view_workspace": {
+      "name": "saved_view_workspace",
+      "schema": "public",
+      "values": [
+        "Opportunity Center",
+        "Amendment Tracker",
+        "Pipeline",
+        "Reporting & Analytics",
+        "Work Queues"
+      ]
+    },
+    "public.tax_year_status": {
+      "name": "tax_year_status",
+      "schema": "public",
+      "values": [
+        "Investigation",
+        "In Progress",
+        "Ready for EA Review",
+        "Waiting for Payment",
+        "Ready to File",
+        "Filed",
+        "Waiting on IRS / FTB",
+        "Accepted",
+        "Closed"
+      ]
+    },
+    "public.workflow_status": {
+      "name": "workflow_status",
+      "schema": "public",
+      "values": [
+        "Investigation",
+        "With Client",
+        "In Progress",
+        "Ready for EA Review",
+        "EA Review",
+        "Waiting for Payment",
+        "Ready for Signature",
+        "Ready to File",
+        "Filed",
+        "Waiting on IRS / FTB",
+        "Accepted",
+        "Closed"
+      ]
+    }
+  },
+  "schemas": {},
+  "sequences": {},
+  "roles": {},
+  "policies": {},
+  "views": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}
