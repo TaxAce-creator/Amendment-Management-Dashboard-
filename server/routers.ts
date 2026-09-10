@@ -1,4 +1,4 @@
-import { COOKIE_NAME } from "@shared/const";
+import { COOKIE_NAME } from "../shared/const.js";
 import { getSessionCookieOptions } from "./_core/cookies.js";
 import { readCookie } from "./auth/security.js";
 import { revokeUserSession } from "./auth/sessionStore.js";
