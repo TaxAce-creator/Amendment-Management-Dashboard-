@@ -7,6 +7,6 @@ export {
   clientRecords as clientRecordsV2,
   importBatches as importBatchesV2,
   opportunityReviews as opportunityReviewsV2,
-} from "./schema";
+} from "./schema.js";
 
-export { CANOPY_IMPORT_ACTIONS } from "./schema";
+export { CANOPY_IMPORT_ACTIONS } from "./schema.js";

@@ -1,4 +1,4 @@
-import type { TaxAceRole, WorkflowStatus } from "../drizzle/schema";
+import type { TaxAceRole, WorkflowStatus } from "../drizzle/schema.js";
 
 export const PRODUCT_NAME = "TaxAce";
 

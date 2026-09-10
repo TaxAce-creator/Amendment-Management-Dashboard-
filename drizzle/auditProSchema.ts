@@ -1,5 +1,5 @@
 import { integer, pgTable, serial, text, timestamp, uniqueIndex } from "drizzle-orm/pg-core";
-import { opportunityReviews, users } from "./schema";
+import { opportunityReviews, users } from "./schema.js";
 
 export const opportunityAuditDetails = pgTable(
   "opportunity_audit_details",
