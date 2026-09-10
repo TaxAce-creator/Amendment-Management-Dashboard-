@@ -1,7 +1,7 @@
 CREATE TYPE "public"."actor_type" AS ENUM('user', 'system');--> statement-breakpoint
 CREATE TYPE "public"."amendment_result" AS ENUM('Additional Refund', 'Reduced Balance Due', 'Increased Refund Offset', 'Balance Due', 'No Financial Change', 'Informational Amendment');--> statement-breakpoint
 CREATE TYPE "public"."assignment_role" AS ENUM('Assigned Preparer', 'EA Reviewer', 'Current Owner', 'Assigned Reviewer');--> statement-breakpoint
-CREATE TYPE "public"."canopy_import_outcome" AS ENUM('New', 'Changed', 'Unchanged', 'Older Snapshot', 'Duplicate Occurrence', 'Duplicate / Conflict', 'Rejected');--> statement-breakpoint
+CREATE TYPE "public"."canopy_import_action" AS ENUM('New', 'Changed', 'Unchanged', 'Older Snapshot', 'Duplicate Occurrence', 'Duplicate / Conflict', 'Rejected');--> statement-breakpoint
 CREATE TYPE "public"."client_type" AS ENUM('Individual', 'Business');--> statement-breakpoint
 CREATE TYPE "public"."document_checklist_status" AS ENUM('Needed', 'Requested', 'Received', 'Not Applicable');--> statement-breakpoint
 CREATE TYPE "public"."filing_method" AS ENUM('Electronic Filing', 'Paper Filing');--> statement-breakpoint
@@ -9,13 +9,13 @@ CREATE TYPE "public"."import_batch_status" AS ENUM('Uploaded', 'Validating', 'Re
 CREATE TYPE "public"."import_lane" AS ENUM('Canopy Task Import', 'Client Data Import', 'Reference Data Import', 'Opportunity Import');--> statement-breakpoint
 CREATE TYPE "public"."import_row_action" AS ENUM('New', 'Updated', 'Unchanged', 'Duplicate / Conflict', 'Rejected');--> statement-breakpoint
 CREATE TYPE "public"."jurisdiction" AS ENUM('Federal', 'California', 'Federal & California', 'Other State');--> statement-breakpoint
+CREATE TYPE "public"."opportunity_recommendation" AS ENUM('Recommend Amendment', 'Additional Review Required', 'Awaiting Documentation', 'No Amendment Recommended');--> statement-breakpoint
 CREATE TYPE "public"."opportunity_status" AS ENUM('Pending Review', 'Under Review', 'Ready to Create Amendment', 'No Amendment Needed', 'Deferred');--> statement-breakpoint
 CREATE TYPE "public"."priority" AS ENUM('High', 'Medium', 'Low');--> statement-breakpoint
-CREATE TYPE "public"."recommendation" AS ENUM('Recommend Amendment', 'Additional Review Required', 'Awaiting Documentation', 'No Amendment Recommended');--> statement-breakpoint
-CREATE TYPE "public"."role" AS ENUM('Admin', 'EA Reviewer', 'Preparer', 'Viewer');--> statement-breakpoint
-CREATE TYPE "public"."saved_view_workspace" AS ENUM('Opportunity Center', 'Amendment Tracker', 'Pipeline', 'Reporting & Analytics', 'Work Queues');--> statement-breakpoint
 CREATE TYPE "public"."tax_year_status" AS ENUM('Investigation', 'In Progress', 'Ready for EA Review', 'Waiting for Payment', 'Ready to File', 'Filed', 'Waiting on IRS / FTB', 'Accepted', 'Closed');--> statement-breakpoint
+CREATE TYPE "public"."taxace_role" AS ENUM('Admin', 'EA Reviewer', 'Preparer', 'Viewer');--> statement-breakpoint
 CREATE TYPE "public"."workflow_status" AS ENUM('Investigation', 'With Client', 'In Progress', 'Ready for EA Review', 'EA Review', 'Waiting for Payment', 'Ready for Signature', 'Ready to File', 'Filed', 'Waiting on IRS / FTB', 'Accepted', 'Closed');--> statement-breakpoint
+CREATE TYPE "public"."workspace" AS ENUM('Opportunity Center', 'Amendment Tracker', 'Pipeline', 'Reporting & Analytics', 'Work Queues');--> statement-breakpoint
 CREATE TABLE "activity_history" (
 	"id" serial PRIMARY KEY NOT NULL,
 	"actorType" "actor_type" NOT NULL,
@@ -98,6 +98,12 @@ CREATE TABLE "assignments" (
 	"current" boolean DEFAULT true NOT NULL
 );
 --> statement-breakpoint
+CREATE TABLE "auth_rate_limit_buckets" (
+	"key" varchar(160) PRIMARY KEY NOT NULL,
+	"count" integer NOT NULL,
+	"resetAt" timestamp NOT NULL
+);
+--> statement-breakpoint
 CREATE TABLE "canopy_client_aliases" (
 	"id" serial PRIMARY KEY NOT NULL,
 	"sourceName" varchar(255) NOT NULL,
@@ -139,7 +145,7 @@ CREATE TABLE "canopy_task_observations" (
 	"sourceRowNumber" integer NOT NULL,
 	"workGroupId" integer,
 	"taskClusterId" integer,
-	"outcome" "canopy_import_outcome" NOT NULL,
+	"outcome" "canopy_import_action" NOT NULL,
 	"pinned" varchar(80) NOT NULL,
 	"sourceStatus" varchar(160) NOT NULL,
 	"task" varchar(500) NOT NULL,
@@ -289,7 +295,7 @@ CREATE TABLE "opportunity_reviews" (
 	"sourceWorkGroupId" integer,
 	"assignedReviewerId" integer,
 	"opportunityStatus" "opportunity_status" DEFAULT 'Pending Review' NOT NULL,
-	"recommendation" "recommendation",
+	"recommendation" "opportunity_recommendation",
 	"priority" "priority" DEFAULT 'Medium' NOT NULL,
 	"amendmentOpportunity" boolean,
 	"previousReturnsReceived" boolean DEFAULT false NOT NULL,
@@ -334,7 +340,7 @@ CREATE TABLE "saved_views" (
 	"id" serial PRIMARY KEY NOT NULL,
 	"userId" integer NOT NULL,
 	"name" varchar(120) NOT NULL,
-	"workspace" "saved_view_workspace" NOT NULL,
+	"workspace" "workspace" NOT NULL,
 	"filters" jsonb NOT NULL,
 	"visibleColumns" jsonb,
 	"sortConfig" jsonb,
@@ -381,7 +387,7 @@ CREATE TABLE "users" (
 	"email" varchar(320) NOT NULL,
 	"authIssuer" varchar(255),
 	"authSubject" varchar(255),
-	"role" "role" DEFAULT 'Viewer' NOT NULL,
+	"role" "taxace_role" DEFAULT 'Viewer' NOT NULL,
 	"active" boolean DEFAULT true NOT NULL,
 	"createdAt" timestamp DEFAULT now() NOT NULL,
 	"updatedAt" timestamp DEFAULT now() NOT NULL,
@@ -464,6 +470,7 @@ CREATE INDEX "amendment_records_status_changed_idx" ON "amendment_records" USING
 CREATE UNIQUE INDEX "amendment_source_links_unique" ON "amendment_source_links" USING btree ("amendmentId","workGroupId");--> statement-breakpoint
 CREATE INDEX "assignments_amendment_current_idx" ON "assignments" USING btree ("amendmentId","current");--> statement-breakpoint
 CREATE INDEX "assignments_assignee_current_idx" ON "assignments" USING btree ("assigneeId","current");--> statement-breakpoint
+CREATE INDEX "auth_rate_limit_buckets_reset_idx" ON "auth_rate_limit_buckets" USING btree ("resetAt");--> statement-breakpoint
 CREATE UNIQUE INDEX "canopy_client_aliases_normalized_unique" ON "canopy_client_aliases" USING btree ("normalizedName");--> statement-breakpoint
 CREATE INDEX "canopy_client_aliases_client_idx" ON "canopy_client_aliases" USING btree ("clientRecordId");--> statement-breakpoint
 CREATE UNIQUE INDEX "canopy_task_clusters_key_hash_unique" ON "canopy_task_clusters" USING btree ("logicalKeyHash");--> statement-breakpoint
@@ -512,40 +519,3 @@ CREATE UNIQUE INDEX "users_email_unique" ON "users" USING btree ("email");--> st
 CREATE UNIQUE INDEX "users_auth_identity_unique" ON "users" USING btree ("authIssuer","authSubject");--> statement-breakpoint
 CREATE INDEX "users_role_active_idx" ON "users" USING btree ("role","active");--> statement-breakpoint
 CREATE UNIQUE INDEX "opportunity_audit_details_review_unique" ON "opportunity_audit_details" USING btree ("opportunityReviewId");
---> statement-breakpoint
-CREATE OR REPLACE FUNCTION set_updated_at() RETURNS trigger AS $$
-BEGIN
-  NEW."updatedAt" = now();
-  RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
---> statement-breakpoint
-CREATE TRIGGER "aging_thresholds_set_updated_at" BEFORE UPDATE ON "aging_thresholds" FOR EACH ROW EXECUTE FUNCTION set_updated_at();
---> statement-breakpoint
-CREATE TRIGGER "amendment_records_set_updated_at" BEFORE UPDATE ON "amendment_records" FOR EACH ROW EXECUTE FUNCTION set_updated_at();
---> statement-breakpoint
-CREATE TRIGGER "canopy_client_aliases_set_updated_at" BEFORE UPDATE ON "canopy_client_aliases" FOR EACH ROW EXECUTE FUNCTION set_updated_at();
---> statement-breakpoint
-CREATE TRIGGER "canopy_task_clusters_set_updated_at" BEFORE UPDATE ON "canopy_task_clusters" FOR EACH ROW EXECUTE FUNCTION set_updated_at();
---> statement-breakpoint
-CREATE TRIGGER "canopy_work_groups_set_updated_at" BEFORE UPDATE ON "canopy_work_groups" FOR EACH ROW EXECUTE FUNCTION set_updated_at();
---> statement-breakpoint
-CREATE TRIGGER "client_records_set_updated_at" BEFORE UPDATE ON "client_records" FOR EACH ROW EXECUTE FUNCTION set_updated_at();
---> statement-breakpoint
-CREATE TRIGGER "document_checklist_set_updated_at" BEFORE UPDATE ON "document_checklist" FOR EACH ROW EXECUTE FUNCTION set_updated_at();
---> statement-breakpoint
-CREATE TRIGGER "notification_preferences_set_updated_at" BEFORE UPDATE ON "notification_preferences" FOR EACH ROW EXECUTE FUNCTION set_updated_at();
---> statement-breakpoint
-CREATE TRIGGER "opportunity_reviews_set_updated_at" BEFORE UPDATE ON "opportunity_reviews" FOR EACH ROW EXECUTE FUNCTION set_updated_at();
---> statement-breakpoint
-CREATE TRIGGER "reference_lists_set_updated_at" BEFORE UPDATE ON "reference_lists" FOR EACH ROW EXECUTE FUNCTION set_updated_at();
---> statement-breakpoint
-CREATE TRIGGER "reference_values_set_updated_at" BEFORE UPDATE ON "reference_values" FOR EACH ROW EXECUTE FUNCTION set_updated_at();
---> statement-breakpoint
-CREATE TRIGGER "saved_views_set_updated_at" BEFORE UPDATE ON "saved_views" FOR EACH ROW EXECUTE FUNCTION set_updated_at();
---> statement-breakpoint
-CREATE TRIGGER "tax_year_records_set_updated_at" BEFORE UPDATE ON "tax_year_records" FOR EACH ROW EXECUTE FUNCTION set_updated_at();
---> statement-breakpoint
-CREATE TRIGGER "users_set_updated_at" BEFORE UPDATE ON "users" FOR EACH ROW EXECUTE FUNCTION set_updated_at();
---> statement-breakpoint
-CREATE TRIGGER "opportunity_audit_details_set_updated_at" BEFORE UPDATE ON "opportunity_audit_details" FOR EACH ROW EXECUTE FUNCTION set_updated_at();

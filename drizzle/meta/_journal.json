@@ -5,22 +5,15 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1788974146512,
-      "tag": "0000_giant_mephisto",
+      "when": 1788998522215,
+      "tag": "0000_baseline",
       "breakpoints": true
     },
     {
       "idx": 1,
       "version": "7",
-      "when": 1788974150752,
+      "when": 1788998525788,
       "tag": "0001_updated_at_triggers",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1788994640257,
-      "tag": "0002_auth_rate_limit_buckets",
       "breakpoints": true
     }
   ]
