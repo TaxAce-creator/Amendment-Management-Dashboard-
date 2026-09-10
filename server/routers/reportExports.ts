@@ -1,13 +1,13 @@
 import { and, desc, eq, gte, inArray, isNull, like, lte, ne, or } from "drizzle-orm";
 import * as XLSX from "xlsx";
 import { z } from "zod";
-import { amendmentRecords, clientRecords, users } from "../../drizzle/schema";
-import { PRIORITIES, WORKFLOW_STATUSES } from "../../shared/taxace";
-import { writeActivity } from "../activity";
-import { requireCapability } from "../authorization";
-import { requireDb } from "../db";
-import { storagePut } from "../storage";
-import { protectedProcedure, router } from "../_core/trpc";
+import { amendmentRecords, clientRecords, users } from "../../drizzle/schema.js";
+import { PRIORITIES, WORKFLOW_STATUSES } from "../../shared/taxace.js";
+import { writeActivity } from "../activity.js";
+import { requireCapability } from "../authorization.js";
+import { requireDb } from "../db.js";
+import { storagePut } from "../storage.js";
+import { protectedProcedure, router } from "../_core/trpc.js";
 
 const reportExportInput = z.object({
   format: z.enum(["csv", "xlsx", "pdf"]),

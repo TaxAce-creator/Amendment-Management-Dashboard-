@@ -1,16 +1,16 @@
 import { desc, eq } from "drizzle-orm";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
-import { canopyTaskObservations, importBatchesV2 } from "../../drizzle/canopySchema";
-import { users } from "../../drizzle/schema";
-import { writeActivity } from "../activity";
-import { requireCapability } from "../authorization";
-import { requireDb } from "../db";
-import { CANOPY_TASK_HEADERS } from "../imports/canopy/contract";
-import { CanopyImportValidationError, parseCanopyExportTimestamp } from "../imports/canopy/parser";
-import { commitCanopyTaskBatch, loadCanopyPreviewForBatch } from "../imports/canopy/service";
-import { storageCreateUploadUrl, storageGetSignedUrl, storageHead, storagePut } from "../storage";
-import { protectedProcedure, router } from "../_core/trpc";
+import { canopyTaskObservations, importBatchesV2 } from "../../drizzle/canopySchema.js";
+import { users } from "../../drizzle/schema.js";
+import { writeActivity } from "../activity.js";
+import { requireCapability } from "../authorization.js";
+import { requireDb } from "../db.js";
+import { CANOPY_TASK_HEADERS } from "../imports/canopy/contract.js";
+import { CanopyImportValidationError, parseCanopyExportTimestamp } from "../imports/canopy/parser.js";
+import { commitCanopyTaskBatch, loadCanopyPreviewForBatch } from "../imports/canopy/service.js";
+import { storageCreateUploadUrl, storageGetSignedUrl, storageHead, storagePut } from "../storage.js";
+import { protectedProcedure, router } from "../_core/trpc.js";
 
 function batchPublicId(): string {
   return `CAN-${new Date().toISOString().slice(0, 10).replaceAll("-", "")}-${crypto.randomUUID().slice(0, 8).toUpperCase()}`;

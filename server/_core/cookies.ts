@@ -1,5 +1,5 @@
 import type { CookieOptions, Request } from "express";
-import { ENV } from "./env";
+import { ENV } from "./env.js";
 
 function isSecureRequest(req: Request) {
   if (req.protocol === "https") return true;

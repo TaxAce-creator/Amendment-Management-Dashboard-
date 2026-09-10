@@ -6,7 +6,7 @@ const routerSource = readFileSync(new URL("./routers.ts", import.meta.url), "utf
 
 describe("Slice 6 operational mutation contract", () => {
   it("routes live amendment operations through the hardened module only", () => {
-    expect(routerSource).toContain('from "./routers/amendmentOperations"');
+    expect(routerSource).toContain('from "./routers/amendmentOperations.js"');
     expect(routerSource).not.toContain('from "./routers/operations"');
   });
 

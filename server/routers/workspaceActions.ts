@@ -1,11 +1,11 @@
 import { and, eq } from "drizzle-orm";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
-import { amendmentRecords } from "../../drizzle/schema";
-import { writeActivity } from "../activity";
-import { requireCapability } from "../authorization";
-import { requireDb } from "../db";
-import { protectedProcedure, router } from "../_core/trpc";
+import { amendmentRecords } from "../../drizzle/schema.js";
+import { writeActivity } from "../activity.js";
+import { requireCapability } from "../authorization.js";
+import { requireDb } from "../db.js";
+import { protectedProcedure, router } from "../_core/trpc.js";
 
 const milestoneSchema = z.enum(["payment", "signature", "clientResponse"]);
 

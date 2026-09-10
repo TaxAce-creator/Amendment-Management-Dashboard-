@@ -1,12 +1,12 @@
 import { and, desc, eq, like, or } from "drizzle-orm";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
-import { clientRecords, opportunityReviews, users } from "../../drizzle/schema";
-import { OPPORTUNITY_STATUSES, PRIORITIES } from "../../shared/taxace";
-import { writeActivity } from "../activity";
-import { requireCapability } from "../authorization";
-import { requireDb } from "../db";
-import { protectedProcedure, router } from "../_core/trpc";
+import { clientRecords, opportunityReviews, users } from "../../drizzle/schema.js";
+import { OPPORTUNITY_STATUSES, PRIORITIES } from "../../shared/taxace.js";
+import { writeActivity } from "../activity.js";
+import { requireCapability } from "../authorization.js";
+import { requireDb } from "../db.js";
+import { protectedProcedure, router } from "../_core/trpc.js";
 
 const draftOpportunityStatusSchema = z.enum(["Pending Review", "Under Review"]);
 

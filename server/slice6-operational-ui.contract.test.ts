@@ -61,7 +61,7 @@ describe("Slice 6 Viewer read-only contract", () => {
   });
 
   it("routes Saved View writes through a capability that Viewer does not have", () => {
-    expect(appRouter).toContain('from "./routers/savedViews"');
+    expect(appRouter).toContain('from "./routers/savedViews.js"');
     expect(savedViews).toContain('requireCapability(ctx.user, "view")');
     expect(savedViews.match(/requireCapability\(ctx\.user, "manageSharedViews"\)/g)?.length).toBe(2);
   });

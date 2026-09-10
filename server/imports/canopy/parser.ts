@@ -6,7 +6,7 @@ import {
   type CanopyImportPreview,
   type ExistingCanopyClusterProjection,
   type ParsedCanopyRow,
-} from "./contract";
+} from "./contract.js";
 
 export class CanopyImportValidationError extends Error {
   constructor(message: string) {

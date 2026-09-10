@@ -12,7 +12,7 @@ import {
   notes,
   taxYearRecords,
   users,
-} from "../../drizzle/schema";
+} from "../../drizzle/schema.js";
 import {
   activeCoverageKey,
   hasCapability,
@@ -20,10 +20,10 @@ import {
   TAX_YEAR_STATUSES,
   validateWorkflowTransition,
   WORKFLOW_STATUSES,
-} from "../../shared/taxace";
-import { writeActivity } from "../activity";
-import { requireCapability } from "../authorization";
-import { requireDb } from "../db";
+} from "../../shared/taxace.js";
+import { writeActivity } from "../activity.js";
+import { requireCapability } from "../authorization.js";
+import { requireDb } from "../db.js";
 import {
   invalidatedAmendmentLevelFinancials,
   planSplitPreservation,
@@ -31,8 +31,8 @@ import {
   structuralFinancialReviewNextAction,
   validateClosureTaxYears,
   validateMergePreservation,
-} from "../transactionPolicy";
-import { protectedProcedure, router } from "../_core/trpc";
+} from "../transactionPolicy.js";
+import { protectedProcedure, router } from "../_core/trpc.js";
 
 const jurisdictionSchema = z.enum(["Federal", "California", "Federal & California", "Other State"]);
 const filingMethodSchema = z.enum(["Electronic Filing", "Paper Filing"]);

@@ -8,7 +8,7 @@ const appRouter = readFileSync(new URL("./routers.ts", import.meta.url), "utf8")
 
 describe("Slice 7 operational notification center", () => {
   it("wires the notification router into the application", () => {
-    expect(appRouter).toContain('from "./routers/notifications"');
+    expect(appRouter).toContain('from "./routers/notifications.js"');
     expect(appRouter).toContain("notifications: notificationsRouter");
   });
 

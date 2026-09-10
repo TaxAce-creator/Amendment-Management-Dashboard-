@@ -5,7 +5,7 @@ import {
   ROLE_CAPABILITIES,
   validateWorkflowTransition,
   WORKFLOW_STATUSES,
-} from "../shared/taxace";
+} from "../shared/taxace.js";
 
 describe("TaxAce workflow transition policy", () => {
   it("allows every approved forward and return transition", () => {

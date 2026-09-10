@@ -6,12 +6,12 @@ import {
   documentChecklist,
   referenceLists,
   referenceValues,
-} from "../../drizzle/schema";
-import { writeActivity } from "../activity";
-import { requireCapability } from "../authorization";
-import { requireDb } from "../db";
-import { ensureSystemConfiguration } from "../referenceData";
-import { protectedProcedure, router } from "../_core/trpc";
+} from "../../drizzle/schema.js";
+import { writeActivity } from "../activity.js";
+import { requireCapability } from "../authorization.js";
+import { requireDb } from "../db.js";
+import { ensureSystemConfiguration } from "../referenceData.js";
+import { protectedProcedure, router } from "../_core/trpc.js";
 
 const checklistStatus = z.enum(["Needed", "Requested", "Received", "Not Applicable"]);
 const DOCUMENT_MONITORING_STATUSES = ["Investigation", "In Progress", "With Client"] as const;

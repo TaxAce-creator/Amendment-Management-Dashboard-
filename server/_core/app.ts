@@ -1,16 +1,16 @@
 import { createExpressMiddleware } from "@trpc/server/adapters/express";
 import { sql } from "drizzle-orm";
 import express, { type Express } from "express";
-import { registerAuthRoutes } from "../auth/routes";
-import { requireDb } from "../db";
-import { applySecurityHeaders } from "../httpSecurity";
-import { registerImportUploadRoute } from "../importUploadRoute";
-import { registerReportDownloadRoute } from "../reportDownloadRoute";
-import { appRouter } from "../routers";
-import { storageReady } from "../storage";
-import { createContext } from "./context";
-import { validateRuntimeEnvironment } from "./env";
-import { enforceTrustedOrigin } from "./origin";
+import { registerAuthRoutes } from "../auth/routes.js";
+import { requireDb } from "../db.js";
+import { applySecurityHeaders } from "../httpSecurity.js";
+import { registerImportUploadRoute } from "../importUploadRoute.js";
+import { registerReportDownloadRoute } from "../reportDownloadRoute.js";
+import { appRouter } from "../routers.js";
+import { storageReady } from "../storage.js";
+import { createContext } from "./context.js";
+import { validateRuntimeEnvironment } from "./env.js";
+import { enforceTrustedOrigin } from "./origin.js";
 
 // Builds the Express app with every route except static asset serving.
 //

@@ -10,12 +10,12 @@ import {
   clientRecords as clientRecordsV2,
   importBatches as importBatchesV2,
   opportunityReviews as opportunityReviewsV2,
-} from "../../../drizzle/schema";
-import { writeActivity } from "../../activity";
-import { requireDb } from "../../db";
-import { storageReadBuffer } from "../../storage";
-import { buildCanopyTaskPreview } from "./parser";
-import type { CanopyImportPreview, CanopyRowAction, ParsedCanopyRow } from "./contract";
+} from "../../../drizzle/schema.js";
+import { writeActivity } from "../../activity.js";
+import { requireDb } from "../../db.js";
+import { storageReadBuffer } from "../../storage.js";
+import { buildCanopyTaskPreview } from "./parser.js";
+import type { CanopyImportPreview, CanopyRowAction, ParsedCanopyRow } from "./contract.js";
 
 function sha256(value: string): string {
   return createHash("sha256").update(value).digest("hex");

@@ -5,7 +5,7 @@ import {
   buildCanopyWorkGroupKey,
   parseCanopyAssignees,
   parseCanopyExportTimestamp,
-} from "./parser";
+} from "./parser.js";
 
 function csv(rows: string[][]): Buffer {
   const quote = (value: string) => `"${value.replaceAll('"', '""')}"`;

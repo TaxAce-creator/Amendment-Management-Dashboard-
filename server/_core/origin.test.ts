@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { Request } from "express";
-import { isTrustedRequestOrigin } from "./origin";
+import { isTrustedRequestOrigin } from "./origin.js";
 
 function requestWithOrigin(origin?: string): Request {
   return {

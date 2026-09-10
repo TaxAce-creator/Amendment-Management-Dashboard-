@@ -1,9 +1,9 @@
 import { COOKIE_NAME } from "@shared/const";
-import { getSessionCookieOptions } from "./_core/cookies";
-import { readCookie } from "./auth/security";
-import { revokeUserSession } from "./auth/sessionStore";
-import { systemRouter } from "./_core/systemRouter";
-import { publicProcedure, router } from "./_core/trpc";
+import { getSessionCookieOptions } from "./_core/cookies.js";
+import { readCookie } from "./auth/security.js";
+import { revokeUserSession } from "./auth/sessionStore.js";
+import { systemRouter } from "./_core/systemRouter.js";
+import { publicProcedure, router } from "./_core/trpc.js";
 import {
   activityRouter,
   amendmentsRouter,
@@ -11,19 +11,19 @@ import {
   clientsRouter,
   notesRouter,
   taxYearsRouter,
-} from "./routers/amendmentOperations";
-import { opportunitiesRouter } from "./routers/opportunities";
-import { auditProRouter } from "./routers/auditPro";
-import { canopyImportsRouter } from "./routers/canopyImports";
-import { documentsRouter } from "./routers/documents";
-import { reportingRouter, searchRouter } from "./routers/insights";
-import { notificationsRouter } from "./routers/notifications";
-import { operationalViewsRouter } from "./routers/operationalViews";
-import { reportExportsRouter } from "./routers/reportExports";
-import { savedViewsRouter } from "./routers/savedViews";
-import { settingsRouter } from "./routers/settings";
-import { sourceReportingRouter } from "./routers/sourceReporting";
-import { workspaceActionsRouter } from "./routers/workspaceActions";
+} from "./routers/amendmentOperations.js";
+import { opportunitiesRouter } from "./routers/opportunities.js";
+import { auditProRouter } from "./routers/auditPro.js";
+import { canopyImportsRouter } from "./routers/canopyImports.js";
+import { documentsRouter } from "./routers/documents.js";
+import { reportingRouter, searchRouter } from "./routers/insights.js";
+import { notificationsRouter } from "./routers/notifications.js";
+import { operationalViewsRouter } from "./routers/operationalViews.js";
+import { reportExportsRouter } from "./routers/reportExports.js";
+import { savedViewsRouter } from "./routers/savedViews.js";
+import { settingsRouter } from "./routers/settings.js";
+import { sourceReportingRouter } from "./routers/sourceReporting.js";
+import { workspaceActionsRouter } from "./routers/workspaceActions.js";
 
 export const appRouter = router({
   system: systemRouter,

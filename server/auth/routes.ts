@@ -1,17 +1,17 @@
 import type { Express, Request, Response } from "express";
-import { COOKIE_NAME } from "../../shared/const";
-import { isAuthorizedTaxAceEmail } from "../authorization";
-import { bindGoogleIdentityToProvisionedUser, getUserByEmail } from "../db";
-import { authRateLimit } from "../httpSecurity";
-import { ENV } from "../_core/env";
-import { getSessionCookieOptions } from "../_core/cookies";
-import { validateGoogleWorkspaceClaims } from "./claims";
+import { COOKIE_NAME } from "../../shared/const.js";
+import { isAuthorizedTaxAceEmail } from "../authorization.js";
+import { bindGoogleIdentityToProvisionedUser, getUserByEmail } from "../db.js";
+import { authRateLimit } from "../httpSecurity.js";
+import { ENV } from "../_core/env.js";
+import { getSessionCookieOptions } from "../_core/cookies.js";
+import { validateGoogleWorkspaceClaims } from "./claims.js";
 import {
   createGoogleAuthorizationRequest,
   exchangeGoogleAuthorizationCode,
-} from "./google";
-import { consumeLoginState, createLoginState, createUserSession } from "./sessionStore";
-import { safeReturnTo, secureStringEqual } from "./security";
+} from "./google.js";
+import { consumeLoginState, createLoginState, createUserSession } from "./sessionStore.js";
+import { safeReturnTo, secureStringEqual } from "./security.js";
 
 function callbackUrl(req: Request): URL {
   return new URL(req.originalUrl, ENV.appOrigin);

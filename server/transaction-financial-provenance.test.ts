@@ -3,7 +3,7 @@ import {
   invalidatedAmendmentLevelFinancials,
   snapshotAmendmentLevelFinancials,
   structuralFinancialReviewNextAction,
-} from "./transactionPolicy";
+} from "./transactionPolicy.js";
 
 describe("structural financial provenance policy", () => {
   it("invalidates amendment-level aggregates instead of distributing them", () => {

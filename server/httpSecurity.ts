@@ -1,8 +1,8 @@
 import { lt } from "drizzle-orm";
 import { sql } from "drizzle-orm";
 import type { NextFunction, Request, Response } from "express";
-import { authRateLimitBuckets } from "../drizzle/schema";
-import { requireDb } from "./db";
+import { authRateLimitBuckets } from "../drizzle/schema.js";
+import { requireDb } from "./db.js";
 
 const AUTH_WINDOW_MS = 60_000;
 const AUTH_MAX_REQUESTS = 20;

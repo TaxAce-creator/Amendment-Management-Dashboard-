@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
-import { isAuthorizedTaxAceEmail, requireCapability } from "./authorization";
-import { writeActivity } from "./activity";
+import { isAuthorizedTaxAceEmail, requireCapability } from "./authorization.js";
+import { writeActivity } from "./activity.js";
 import {
   executeAtomically,
   planMergeTaxYearMoves,
@@ -8,10 +8,10 @@ import {
   validateClosureTaxYears,
   validateCreationTaxYears,
   validateMergePreservation,
-} from "./transactionPolicy";
-import { runCrossWorkspaceRefreshers } from "../client/src/lib/refreshPolicy";
-import { appRouter } from "./routers";
-import type { TrpcContext } from "./_core/context";
+} from "./transactionPolicy.js";
+import { runCrossWorkspaceRefreshers } from "../client/src/lib/refreshPolicy.js";
+import { appRouter } from "./routers.js";
+import type { TrpcContext } from "./_core/context.js";
 
 const user = (role: "Admin" | "EA Reviewer" | "Preparer" | "Viewer") => ({ role, active: true, email: "team@taxacebsi.com" });
 

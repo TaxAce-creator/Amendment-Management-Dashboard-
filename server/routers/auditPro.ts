@@ -2,7 +2,7 @@ import { and, desc, eq, inArray, like, or } from "drizzle-orm";
 import { TRPCError } from "@trpc/server";
 import { nanoid } from "nanoid";
 import { z } from "zod";
-import { opportunityAuditDetails } from "../../drizzle/auditProSchema";
+import { opportunityAuditDetails } from "../../drizzle/auditProSchema.js";
 import {
   amendmentRecords,
   amendmentSourceLinks,
@@ -15,18 +15,18 @@ import {
   opportunityReviews,
   taxYearRecords,
   users,
-} from "../../drizzle/schema";
+} from "../../drizzle/schema.js";
 import {
   activeCoverageKey,
   hasCapability,
   OPPORTUNITY_STATUSES,
   PRIORITIES,
-} from "../../shared/taxace";
-import { writeActivity } from "../activity";
-import { requireCapability } from "../authorization";
-import { requireDb } from "../db";
-import { validateCreationTaxYears } from "../transactionPolicy";
-import { protectedProcedure, router } from "../_core/trpc";
+} from "../../shared/taxace.js";
+import { writeActivity } from "../activity.js";
+import { requireCapability } from "../authorization.js";
+import { requireDb } from "../db.js";
+import { validateCreationTaxYears } from "../transactionPolicy.js";
+import { protectedProcedure, router } from "../_core/trpc.js";
 
 const recommendationSchema = z.enum([
   "Recommend Amendment",

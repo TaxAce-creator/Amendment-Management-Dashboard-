@@ -1,10 +1,10 @@
 import { and, eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/node-postgres";
 import { Pool } from "pg";
-import * as coreSchema from "../drizzle/schema";
-import * as auditProSchema from "../drizzle/auditProSchema";
-import { users } from "../drizzle/schema";
-import { normalizeEmail } from "./auth/security";
+import * as coreSchema from "../drizzle/schema.js";
+import * as auditProSchema from "../drizzle/auditProSchema.js";
+import { users } from "../drizzle/schema.js";
+import { normalizeEmail } from "./auth/security.js";
 
 const schema = { ...coreSchema, ...auditProSchema };
 

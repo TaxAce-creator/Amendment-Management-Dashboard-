@@ -1,5 +1,5 @@
 import * as oidc from "openid-client";
-import { ENV } from "../_core/env";
+import { ENV } from "../_core/env.js";
 
 let cachedConfiguration: Promise<oidc.Configuration> | null = null;
 

@@ -1,7 +1,7 @@
 import { TRPCError } from "@trpc/server";
-import type { User } from "../drizzle/schema";
-import { hasCapability, type Capability } from "../shared/taxace";
-import { ENV } from "./_core/env";
+import type { User } from "../drizzle/schema.js";
+import { hasCapability, type Capability } from "../shared/taxace.js";
+import { ENV } from "./_core/env.js";
 
 export function isAuthorizedTaxAceEmail(email: string | null | undefined): boolean {
   if (!email) return false;

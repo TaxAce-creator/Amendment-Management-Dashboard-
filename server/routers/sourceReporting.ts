@@ -1,8 +1,8 @@
 import { desc, eq, inArray } from "drizzle-orm";
-import { canopyTaskClusters, canopyWorkGroups, importBatches, users } from "../../drizzle/schema";
-import { requireCapability } from "../authorization";
-import { requireDb } from "../db";
-import { protectedProcedure, router } from "../_core/trpc";
+import { canopyTaskClusters, canopyWorkGroups, importBatches, users } from "../../drizzle/schema.js";
+import { requireCapability } from "../authorization.js";
+import { requireDb } from "../db.js";
+import { protectedProcedure, router } from "../_core/trpc.js";
 
 export const sourceReportingRouter = router({
   summary: protectedProcedure.query(async ({ ctx }) => {

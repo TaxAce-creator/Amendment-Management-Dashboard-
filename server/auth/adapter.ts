@@ -1,9 +1,9 @@
 import type { Request } from "express";
-import type { User } from "../../drizzle/schema";
-import { COOKIE_NAME } from "../../shared/const";
-import { isAuthorizedTaxAceEmail } from "../authorization";
-import { findUserBySessionToken } from "./sessionStore";
-import { readCookie } from "./security";
+import type { User } from "../../drizzle/schema.js";
+import { COOKIE_NAME } from "../../shared/const.js";
+import { isAuthorizedTaxAceEmail } from "../authorization.js";
+import { findUserBySessionToken } from "./sessionStore.js";
+import { readCookie } from "./security.js";
 
 export async function authenticateRequest(req: Request): Promise<User | null> {
   const token = readCookie(req, COOKIE_NAME);

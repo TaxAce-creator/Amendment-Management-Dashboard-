@@ -1,5 +1,5 @@
 import type { Request, Response, NextFunction } from "express";
-import { ENV } from "./env";
+import { ENV } from "./env.js";
 
 function normalizedOrigin(value: string): string | null {
   try {

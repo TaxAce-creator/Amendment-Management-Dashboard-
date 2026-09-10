@@ -1,6 +1,6 @@
 import type { Request } from "express";
 import { afterEach, describe, expect, it } from "vitest";
-import { isTrustedRequestOrigin } from "./_core/origin";
+import { isTrustedRequestOrigin } from "./_core/origin.js";
 
 function requestWithHeaders(headers: Record<string, string>, secure = false, localPort?: number): Request {
   const normalized = Object.fromEntries(

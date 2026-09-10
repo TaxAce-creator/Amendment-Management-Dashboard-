@@ -7,7 +7,7 @@ const appRouter = readFileSync(new URL("./routers.ts", import.meta.url), "utf8")
 
 describe("Slice 7 filtered reporting export contract", () => {
   it("wires the dedicated filtered export router", () => {
-    expect(appRouter).toContain('from "./routers/reportExports"');
+    expect(appRouter).toContain('from "./routers/reportExports.js"');
     expect(appRouter).toContain("reportExports: reportExportsRouter");
     expect(reports).toContain("trpc.reportExports.export.useMutation");
   });

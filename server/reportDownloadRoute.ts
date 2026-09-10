@@ -1,7 +1,7 @@
 import type { Express } from "express";
-import { hasCapability } from "../shared/taxace";
-import { authenticateRequest } from "./auth/adapter";
-import { storageReadBuffer } from "./storage";
+import { hasCapability } from "../shared/taxace.js";
+import { authenticateRequest } from "./auth/adapter.js";
+import { storageReadBuffer } from "./storage.js";
 
 const REPORT_FILENAME_PATTERN = /^TaxAce-Amendment-Report-\d{4}-\d{2}-\d{2}T\d{2}-\d{2}-\d{2}\.(csv|xlsx|pdf)$/;
 

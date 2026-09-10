@@ -1,4 +1,4 @@
-import { activityHistory } from "../drizzle/schema";
+import { activityHistory } from "../drizzle/schema.js";
 
 export type ActivityInput = {
   actorType: "user" | "system";

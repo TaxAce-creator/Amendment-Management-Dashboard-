@@ -11,13 +11,13 @@ import {
   savedViews,
   taxYearRecords,
   users,
-} from "../../drizzle/schema";
-import { hasCapability, WORKFLOW_STATUSES } from "../../shared/taxace";
-import { writeActivity } from "../activity";
-import { requireCapability } from "../authorization";
-import { requireDb } from "../db";
-import { storageGetSignedUrl, storagePut } from "../storage";
-import { protectedProcedure, router } from "../_core/trpc";
+} from "../../drizzle/schema.js";
+import { hasCapability, WORKFLOW_STATUSES } from "../../shared/taxace.js";
+import { writeActivity } from "../activity.js";
+import { requireCapability } from "../authorization.js";
+import { requireDb } from "../db.js";
+import { storageGetSignedUrl, storagePut } from "../storage.js";
+import { protectedProcedure, router } from "../_core/trpc.js";
 
 function daysBetween(start: Date, end = new Date()): number {
   return Math.max(0, Math.floor((end.getTime() - start.getTime()) / 86_400_000));

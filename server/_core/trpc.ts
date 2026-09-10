@@ -1,9 +1,9 @@
 import { NOT_ADMIN_ERR_MSG, UNAUTHED_ERR_MSG } from "@shared/const";
 import { initTRPC, TRPCError } from "@trpc/server";
 import superjson from "superjson";
-import { requireActiveUser } from "../authorization";
-import { hasCapability } from "../../shared/taxace";
-import type { TrpcContext } from "./context";
+import { requireActiveUser } from "../authorization.js";
+import { hasCapability } from "../../shared/taxace.js";
+import type { TrpcContext } from "./context.js";
 
 const t = initTRPC.context<TrpcContext>().create({
   transformer: superjson,

@@ -1,6 +1,6 @@
 import "dotenv/config";
 import type { IncomingMessage, ServerResponse } from "http";
-import { createApp } from "../server/_core/app";
+import { createApp } from "../server/_core/app.js";
 
 // Vercel serverless entry point. Vercel's Node.js runtime invokes this
 // handler for every request routed here by vercel.json (everything under

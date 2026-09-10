@@ -1,7 +1,7 @@
 import { eq } from "drizzle-orm";
-import { agingThresholds, referenceLists, referenceValues } from "../drizzle/schema";
-import { SYSTEM_REFERENCE_LISTS, WORKFLOW_STATUSES } from "../shared/taxace";
-import { requireDb } from "./db";
+import { agingThresholds, referenceLists, referenceValues } from "../drizzle/schema.js";
+import { SYSTEM_REFERENCE_LISTS, WORKFLOW_STATUSES } from "../shared/taxace.js";
+import { requireDb } from "./db.js";
 
 const LIST_LABELS: Record<keyof typeof SYSTEM_REFERENCE_LISTS, string> = {
   amendmentReasons: "Amendment Reasons",

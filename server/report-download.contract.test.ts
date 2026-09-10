@@ -1,6 +1,6 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
-import { reportStorageKey } from "./reportDownloadRoute";
+import { reportStorageKey } from "./reportDownloadRoute.js";
 
 describe("protected report download contract", () => {
   it("scopes report objects to the authenticated user and rejects path tricks", () => {

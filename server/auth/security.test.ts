@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { validateGoogleWorkspaceClaims } from "./claims";
-import { safeReturnTo, secureStringEqual, sha256 } from "./security";
+import { validateGoogleWorkspaceClaims } from "./claims.js";
+import { safeReturnTo, secureStringEqual, sha256 } from "./security.js";
 
 describe("Google Workspace identity validation", () => {
   it("accepts a verified identity from the configured hosted domain", () => {

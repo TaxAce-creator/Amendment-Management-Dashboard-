@@ -9,11 +9,11 @@ import {
   taxYearRecords,
   users,
   type User,
-} from "../../drizzle/schema";
-import { PRIORITIES, WORKFLOW_STATUSES } from "../../shared/taxace";
-import { requireCapability } from "../authorization";
-import { requireDb } from "../db";
-import { protectedProcedure, router } from "../_core/trpc";
+} from "../../drizzle/schema.js";
+import { PRIORITIES, WORKFLOW_STATUSES } from "../../shared/taxace.js";
+import { requireCapability } from "../authorization.js";
+import { requireDb } from "../db.js";
+import { protectedProcedure, router } from "../_core/trpc.js";
 
 const trackerInputSchema = z.object({
   search: z.string().trim().max(160).default(""),

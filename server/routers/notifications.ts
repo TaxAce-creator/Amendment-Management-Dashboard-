@@ -4,10 +4,10 @@ import {
   amendmentRecords,
   clientRecords,
   notificationPreferences,
-} from "../../drizzle/schema";
-import { requireCapability } from "../authorization";
-import { requireDb } from "../db";
-import { protectedProcedure, router } from "../_core/trpc";
+} from "../../drizzle/schema.js";
+import { requireCapability } from "../authorization.js";
+import { requireDb } from "../db.js";
+import { protectedProcedure, router } from "../_core/trpc.js";
 
 const DAY_MS = 86_400_000;
 

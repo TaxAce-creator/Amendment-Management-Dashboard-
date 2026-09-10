@@ -4,17 +4,17 @@ import { sql } from "drizzle-orm";
 import express from "express";
 import { createServer } from "http";
 import net from "net";
-import { registerAuthRoutes } from "../auth/routes";
-import { requireDb } from "../db";
-import { applySecurityHeaders } from "../httpSecurity";
-import { registerImportUploadRoute } from "../importUploadRoute";
-import { registerReportDownloadRoute } from "../reportDownloadRoute";
-import { appRouter } from "../routers";
-import { storageReady } from "../storage";
-import { createContext } from "./context";
-import { validateRuntimeEnvironment } from "./env";
-import { enforceTrustedOrigin } from "./origin";
-import { serveStatic, setupVite } from "./vite";
+import { registerAuthRoutes } from "../auth/routes.js";
+import { requireDb } from "../db.js";
+import { applySecurityHeaders } from "../httpSecurity.js";
+import { registerImportUploadRoute } from "../importUploadRoute.js";
+import { registerReportDownloadRoute } from "../reportDownloadRoute.js";
+import { appRouter } from "../routers.js";
+import { storageReady } from "../storage.js";
+import { createContext } from "./context.js";
+import { validateRuntimeEnvironment } from "./env.js";
+import { enforceTrustedOrigin } from "./origin.js";
+import { serveStatic, setupVite } from "./vite.js";
 
 const LISTEN_HOST = process.env.HOST?.trim() || "0.0.0.0";
 

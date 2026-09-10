@@ -8,22 +8,22 @@ import {
   referenceValues,
   TAXACE_ROLES,
   users,
-} from "../../drizzle/schema";
+} from "../../drizzle/schema.js";
 import {
   hasCapability,
   OPPORTUNITY_STATUSES,
   ROLE_CAPABILITIES,
   TAX_YEAR_STATUSES,
   WORKFLOW_STATUSES,
-} from "../../shared/taxace";
-import { CANOPY_TASK_HEADERS } from "../imports/canopy/contract";
-import { writeActivity } from "../activity";
-import { isAuthorizedTaxAceEmail, requireCapability } from "../authorization";
-import { createProvisionedUser, getUserByEmail, requireDb } from "../db";
-import { ensureSystemConfiguration } from "../referenceData";
-import { protectedProcedure, router } from "../_core/trpc";
-import { normalizeEmail } from "../auth/security";
-import { revokeAllUserSessions } from "../auth/sessionStore";
+} from "../../shared/taxace.js";
+import { CANOPY_TASK_HEADERS } from "../imports/canopy/contract.js";
+import { writeActivity } from "../activity.js";
+import { isAuthorizedTaxAceEmail, requireCapability } from "../authorization.js";
+import { createProvisionedUser, getUserByEmail, requireDb } from "../db.js";
+import { ensureSystemConfiguration } from "../referenceData.js";
+import { protectedProcedure, router } from "../_core/trpc.js";
+import { normalizeEmail } from "../auth/security.js";
+import { revokeAllUserSessions } from "../auth/sessionStore.js";
 
 function slug(value: string): string {
   return value.normalize("NFKC").trim().toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");

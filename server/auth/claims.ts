@@ -1,5 +1,5 @@
-import { ENV } from "../_core/env";
-import { normalizeEmail } from "./security";
+import { ENV } from "../_core/env.js";
+import { normalizeEmail } from "./security.js";
 
 export type GoogleWorkspaceClaims = {
   iss?: unknown;

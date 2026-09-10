@@ -1,9 +1,9 @@
 import { and, eq, gt, isNull, lt } from "drizzle-orm";
-import type { User } from "../../drizzle/schema";
-import { oidcLoginStates, userSessions, users } from "../../drizzle/schema";
-import { requireDb } from "../db";
-import { ENV } from "../_core/env";
-import { randomOpaqueToken, sha256 } from "./security";
+import type { User } from "../../drizzle/schema.js";
+import { oidcLoginStates, userSessions, users } from "../../drizzle/schema.js";
+import { requireDb } from "../db.js";
+import { ENV } from "../_core/env.js";
+import { randomOpaqueToken, sha256 } from "./security.js";
 
 const LOGIN_STATE_TTL_MS = 10 * 60 * 1000;
 const SESSION_TOUCH_INTERVAL_MS = 5 * 60 * 1000;

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { shouldCreatePendingReviewForImportedWorkGroup } from "./service";
+import { shouldCreatePendingReviewForImportedWorkGroup } from "./service.js";
 
 describe("Canopy opportunity eligibility", () => {
   it("creates a Pending Review for a first eligible imported work group", () => {

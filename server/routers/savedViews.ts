@@ -1,10 +1,10 @@
 import { and, eq, or } from "drizzle-orm";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
-import { savedViews } from "../../drizzle/schema";
-import { requireCapability } from "../authorization";
-import { requireDb } from "../db";
-import { protectedProcedure, router } from "../_core/trpc";
+import { savedViews } from "../../drizzle/schema.js";
+import { requireCapability } from "../authorization.js";
+import { requireDb } from "../db.js";
+import { protectedProcedure, router } from "../_core/trpc.js";
 
 const workspaceSchema = z.enum([
   "Opportunity Center",

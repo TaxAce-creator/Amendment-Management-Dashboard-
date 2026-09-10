@@ -1,11 +1,11 @@
 import { eq } from "drizzle-orm";
 import express, { type Express } from "express";
-import { importBatchesV2 } from "../drizzle/canopySchema";
-import { hasCapability } from "../shared/taxace";
-import { authenticateRequest } from "./auth/adapter";
-import { requireDb } from "./db";
-import { enforceTrustedOrigin } from "./_core/origin";
-import { storagePut } from "./storage";
+import { importBatchesV2 } from "../drizzle/canopySchema.js";
+import { hasCapability } from "../shared/taxace.js";
+import { authenticateRequest } from "./auth/adapter.js";
+import { requireDb } from "./db.js";
+import { enforceTrustedOrigin } from "./_core/origin.js";
+import { storagePut } from "./storage.js";
 
 function importMaxBytes(): number {
   const configured = Number(process.env.IMPORT_MAX_BYTES ?? 50 * 1024 * 1024);
